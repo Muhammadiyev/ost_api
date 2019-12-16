@@ -1,0 +1,8 @@
+templates/
+db.sqlite3
+Pipfile.lock
+# .env.dev
+# .env.prod
+# .env.prod.db
+staticfiles
+celerybeat-schedule
