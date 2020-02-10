@@ -20,11 +20,11 @@ class Department(models.Model):
     created_at = models.DateTimeField(null=False, default=now)
     parent = models.ForeignKey(
         'self', blank=True, null=True, on_delete=models.CASCADE)
-    status = models.BooleanField(_('status_user'), default=True)
-    conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
         Company, null=True, related_name='department_of_company', on_delete=models.CASCADE)
-
+    status = models.BooleanField(_('status_user'), default=True)
+    conference = models.BooleanField(_('conference_user'), default=True)
+    
     def __str__(self):
         return "%s" % self.department_name
 

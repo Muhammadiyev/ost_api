@@ -28,7 +28,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [settings.LOGIN_FIELD, 'password','department','status','conference', 'auth_token']
+        fields = ['login',settings.LOGIN_FIELD, 'password', 'department', 'auth_token']
         read_only_fields = ('id', 'is_active', 'is_staff')
 
     def validate(self, attrs):
@@ -86,6 +86,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'login', 'email', 'first_name', 'last_name', 'midname',
                   'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'department']
 
+
 class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -101,9 +102,9 @@ class UserOfConferenceSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'department']
 
 
-
 class EmptySerializer(serializers.Serializer):
     pass
+
 
 class AuthUserSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
@@ -117,6 +118,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'first_name',
                   'last_name', 'is_active', 'is_staff', 'auth_token')
         read_only_fields = ('id', 'is_active', 'is_staff')
+
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=300, required=True)
@@ -134,7 +136,8 @@ class PasswordChangeSerializer(serializers.Serializer):
 
     def validate_current_password(self, value):
         if not self.context['request'].user.check_password(value):
-            raise serializers.ValidationError(self.default_error_messages['invalid_password'])
+            raise serializers.ValidationError(
+                self.default_error_messages['invalid_password'])
         return value
 
     def validate_new_password(self, value):

@@ -31,3 +31,4 @@ class DepartmentOfUserViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
+

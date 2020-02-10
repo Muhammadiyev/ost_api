@@ -11,7 +11,7 @@ from company.models import Department
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    login = models.CharField(max_length=50)
+    login = models.CharField(max_length=50,blank=True)
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField('First Name', max_length=255, blank=True,
                                   null=False)
@@ -29,8 +29,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(null=False, default=now)
     department = models.ForeignKey(
         Department, blank=True, null=True,related_name="user_of_department", on_delete=models.CASCADE)
-    status = models.BooleanField(_('status_user'), default=False)
-    conference = models.BooleanField(_('conference_user'), default=False)
+    # role = models.ForeignKey(
+    #     Role, blank=True, null=True,related_name="user_of_role", on_delete=models.CASCADE)
 
     objects = UserManager()
 
