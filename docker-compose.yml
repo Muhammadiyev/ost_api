@@ -8,18 +8,26 @@ services:
       - .:/usr/src/app/
     ports:
       - 8000:8000
-    env_file:
-      - ./.env.dev
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=0^00z5_j-6-r=#*j*or8+$_axqebapi(5&v%7gf*_crvq_xqj3
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=bosch
+      - SQL_USER=admin
+      - SQL_PASSWORD=hcsob
+      - SQL_HOST=db
+      - SQL_PORT=5432
+      - DATABASE=postgres
     depends_on:
       - db
   db:
-    image: postgres:12.0-alpine
+    image: postgres:11.5-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=hcsob
+      - POSTGRES_DB=bosch
 
 volumes:
   postgres_data:
