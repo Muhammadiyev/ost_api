@@ -2,6 +2,8 @@ templates/
 db.sqlite3
 Pipfile.lock
 venv
+.env
+.env.db
 .vscode
 staticfiles
 celerybeat-schedule
