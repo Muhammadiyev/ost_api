@@ -14,16 +14,27 @@ class Company(models.Model):
         return "%s" % self.name
 
 
+class Role(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+    is_active = models.BooleanField(_('active'), default=True)
+    created_at = models.DateTimeField(null=False, default=now)
+    company = models.ForeignKey(
+        Company, blank=True, null=True,related_name="role_of_company", on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return "%s" % self.name
+
+    @property
+    def users(self):
+        return self.user_of_role
+
+
 class Department(models.Model):
     department_name = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(_('active'), default=True)
     created_at = models.DateTimeField(null=False, default=now)
-    parent = models.ForeignKey(
-        'self', blank=True, null=True, on_delete=models.CASCADE)
     company = models.ForeignKey(
-        Company, null=True, related_name='department_of_company', on_delete=models.CASCADE)
-    status = models.BooleanField(_('status_user'), default=True)
-    conference = models.BooleanField(_('conference_user'), default=True)
+        Company, blank=True, null=True,related_name="department_of_company", on_delete=models.CASCADE)
     
     def __str__(self):
         return "%s" % self.department_name

@@ -7,7 +7,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from .managers import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.timezone import now
-from company.models import Department
+from company.models import Role, Department
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -27,10 +27,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('staff status'), default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_at = models.DateTimeField(null=False, default=now)
+    role = models.ForeignKey(
+        Role, blank=True, null=True,related_name="user_of_role", on_delete=models.CASCADE)
     department = models.ForeignKey(
         Department, blank=True, null=True,related_name="user_of_department", on_delete=models.CASCADE)
-    # role = models.ForeignKey(
-    #     Role, blank=True, null=True,related_name="user_of_role", on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self', blank=True, null=True, on_delete=models.CASCADE)
+    status = models.BooleanField(_('status_user'), default=True)
+    conference = models.BooleanField(_('conference_user'), default=True)
 
     objects = UserManager()
 

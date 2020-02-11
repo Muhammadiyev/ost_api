@@ -4,7 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
 from .models import Group, GroupChat, GroupUser, Message
 from users.models import CustomUser
-from users.serializers import UserOfDepartmentSerializer
+from users.serializers import UserOfRoleSerializer
 
 User = get_user_model()
 

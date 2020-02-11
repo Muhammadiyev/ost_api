@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
 from .models import CustomUser
-from company.models import Department
+from company.models import Role
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 from django.db import IntegrityError, transaction
@@ -28,7 +28,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['login',settings.LOGIN_FIELD, 'password', 'department', 'auth_token']
+        fields = ['login',settings.LOGIN_FIELD, 'password', 'role','department','status','conference', 'auth_token']
         read_only_fields = ('id', 'is_active', 'is_staff')
 
     def validate(self, attrs):
@@ -80,26 +80,26 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    #department = DepartmentSerializer(read_only=True)
+    
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'first_name', 'last_name', 'midname',
-                  'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'department']
+                  'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'role']
 
 
-class UserOfDepartmentSerializer(serializers.ModelSerializer):
+class UserOfRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'first_name', 'last_name', 'midname',
-                  'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'department']
+                  'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'role']
 
 
 class UserOfConferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'department']
+        fields = ['id', 'email', 'role']
 
 
 class EmptySerializer(serializers.Serializer):
@@ -108,7 +108,6 @@ class EmptySerializer(serializers.Serializer):
 
 class AuthUserSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
-    #department = DepartmentSerializer()
 
     def get_auth_token(self, obj):
         return tokens.get_token_for_user(obj, "authentication")
