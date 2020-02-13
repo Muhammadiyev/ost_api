@@ -14,39 +14,39 @@ User = get_user_model()
 
 
 class RoleViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Role.objects.all()
     serializer_class = serializers.RoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['company']
+    # filter_backends = (filters.DjangoFilterBackend,
+    #                    SearchFilter, OrderingFilter)
+    # filter_fields = ['company']
 
 
 class RoleOfUserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Role.objects.all()
     serializer_class = serializers.RoleOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['company']
+    # filter_backends = (filters.DjangoFilterBackend,
+    #                    SearchFilter, OrderingFilter)
+    # filter_fields = ['company']
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['company']
+    # filter_backends = (filters.DjangoFilterBackend,
+    #                    SearchFilter, OrderingFilter)
+    # filter_fields = ['company']
 
 class DepartmentOfUserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['company']
+    # filter_backends = (filters.DjangoFilterBackend,
+    #                    SearchFilter, OrderingFilter)
+    # filter_fields = ['company']

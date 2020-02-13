@@ -4,7 +4,6 @@ from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
 from .models import Company, Role, Department
 from users.models import CustomUser
-from users.serializers import UserOfRoleSerializer
 
 User = get_user_model()
 
@@ -23,7 +22,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ['id','department_name', 'company',
+        fields = ['id','department_name',
                   'is_active', 'created_at']
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
@@ -32,7 +31,7 @@ class DepartmentOfUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ['id','department_name','user_of_department', 'company',
+        fields = ['id','department_name','user_of_department',
                   'is_active', 'created_at']
 
 
@@ -42,7 +41,7 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id', 'name', 'company',
+        fields = ['id', 'name',
                   'is_active', 'created_at']
 
 
@@ -52,5 +51,5 @@ class RoleOfUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id', 'name', 'user_of_role', 'company',
+        fields = ['id', 'name', 'user_of_role',
                   'is_active', 'created_at']

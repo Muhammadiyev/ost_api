@@ -9,6 +9,8 @@ from .models import CustomUser
 from . import serializers
 from .utils import get_and_authenticate_user, create_user_account
 from rest_framework import authentication
+from django_filters import rest_framework as filters
+from rest_framework.filters import SearchFilter, OrderingFilter
 User = get_user_model()
 
 
@@ -55,3 +57,30 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
+
+class UserOfDepartmentViewSet(viewsets.ModelViewSet):
+    permission_classes = []
+    queryset = User.objects.all()
+    serializer_class = serializers.UserOfDepartmentSerializer
+    authentication_classes = [authentication.TokenAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['parent','company']
+
+class UserOfRoleSerializerViewSet(viewsets.ModelViewSet):
+    permission_classes = []
+    queryset = User.objects.all()
+    serializer_class = serializers.UserOfRoleSerializer
+    authentication_classes = [authentication.TokenAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['parent','company']
+
+class UserOfParentSerializerViewSet(viewsets.ModelViewSet):
+    permission_classes = []
+    queryset = User.objects.all()
+    serializer_class = serializers.UserOfParentSerializer
+    authentication_classes = [authentication.TokenAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['company']

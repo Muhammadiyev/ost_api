@@ -35,6 +35,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         'self', blank=True, null=True, on_delete=models.CASCADE)
     status = models.BooleanField(_('status_user'), default=True)
     conference = models.BooleanField(_('conference_user'), default=True)
+    company = models.ForeignKey(
+        'company.Company', blank=True, null=True,related_name="user_of_company", on_delete=models.CASCADE)
 
     objects = UserManager()
 

@@ -10,7 +10,7 @@ from django.db import IntegrityError, transaction
 from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
 from . import tokens
-
+from company.serializers import RoleSerializer, DepartmentSerializer
 User = get_user_model()
 
 
@@ -28,7 +28,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['login',settings.LOGIN_FIELD, 'password', 'role','department','status','conference', 'auth_token']
+        fields = ['login',settings.LOGIN_FIELD, 'password','company','parent', 'role','department','status','conference', 'auth_token']
         read_only_fields = ('id', 'is_active', 'is_staff')
 
     def validate(self, attrs):
@@ -83,7 +83,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'first_name', 'last_name', 'midname',
+        fields = ['id', 'login', 'email','parent','company','department', 'first_name', 'last_name', 'midname',
                   'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'role']
 
 
@@ -143,3 +143,36 @@ class PasswordChangeSerializer(serializers.Serializer):
         # https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#django.contrib.auth.password_validation.validate_password
         password_validation.validate_password(value)
         return value
+
+
+class UserOfDepartmentSerializer(serializers.ModelSerializer):
+
+    department = DepartmentSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['parent','company', 'department']
+
+
+class UserOfRoleSerializer(serializers.ModelSerializer):
+    
+    role = RoleSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['parent','company', 'role']
+
+class UserOfParentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id','parent','company','login', 'email',]
+
+# class RecursiveSerializer(serializers.Serializer):
+
+#     def to_representation(self, value):
+#         serializer = self.parent.parent.__class__(value, context=self.context)
+#         return serializer.data
+
+
+#     children = RecursiveSerializer(read_only=True, many=True)

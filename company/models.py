@@ -18,9 +18,7 @@ class Role(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(_('active'), default=True)
     created_at = models.DateTimeField(null=False, default=now)
-    company = models.ForeignKey(
-        Company, blank=True, null=True,related_name="role_of_company", on_delete=models.CASCADE)
-    
+
     def __str__(self):
         return "%s" % self.name
 
@@ -33,8 +31,7 @@ class Department(models.Model):
     department_name = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(_('active'), default=True)
     created_at = models.DateTimeField(null=False, default=now)
-    company = models.ForeignKey(
-        Company, blank=True, null=True,related_name="department_of_company", on_delete=models.CASCADE)
+    
     
     def __str__(self):
         return "%s" % self.department_name
