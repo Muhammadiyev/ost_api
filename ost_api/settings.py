@@ -4,11 +4,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'sdsds')
 
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
 # Application definition
 
 INSTALLED_APPS = [

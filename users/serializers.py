@@ -1,8 +1,8 @@
-from django.contrib.auth import get_user_model, password_validation
+from django.contrib.auth import get_user_model, password_validation,authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
-from .models import CustomUser
+from .models import CustomUser, CreateUserMany
 from company.models import Role
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
@@ -10,7 +10,8 @@ from django.db import IntegrityError, transaction
 from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
 from . import tokens
-from company.serializers import RoleSerializer, DepartmentSerializer
+from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUserSerializer
+
 User = get_user_model()
 
 
@@ -28,7 +29,8 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['login',settings.LOGIN_FIELD, 'password','company','parent', 'role','department','status','conference', 'auth_token']
+        fields = ['login', settings.LOGIN_FIELD, 'password', 'company',
+                  'parent','phone', 'role', 'department', 'status', 'conference', 'auth_token']
         read_only_fields = ('id', 'is_active', 'is_staff')
 
     def validate(self, attrs):
@@ -80,11 +82,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    
+    role = RoleOfUserSerializer(read_only=True)
+    department = DepartmentSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'login', 'email','parent','company','department', 'first_name', 'last_name', 'midname',
-                  'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'role']
+        fields = ['id', 'login', 'email', 'parent', 'company', 'department', 'role', 'first_name', 'last_name', 'midname',
+                  'phone', 'last_seen', 'city', 'avatar', 'is_active']
 
 
 class UserOfRoleSerializer(serializers.ModelSerializer):
@@ -151,22 +155,23 @@ class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['parent','company', 'department']
+        fields = ['parent', 'company', 'department']
 
 
-class UserOfRoleSerializer(serializers.ModelSerializer):
-    
-    role = RoleSerializer(read_only=True)
+# class UserOfRoleSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = User
-        fields = ['parent','company', 'role']
+#     role = RoleSerializer(read_only=True)
+
+#     class Meta:
+#         model = User
+#         fields = ['parent', 'company', 'role']
+
 
 class UserOfParentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','parent','company','login', 'email',]
+        fields = ['id', 'parent', 'company', 'login', 'email', ]
 
 # class RecursiveSerializer(serializers.Serializer):
 
@@ -176,3 +181,84 @@ class UserOfParentSerializer(serializers.ModelSerializer):
 
 
 #     children = RecursiveSerializer(read_only=True, many=True)
+
+class CreateUsermanySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CreateUserMany
+        fields = ['id','many_user']
+
+
+class CreateUserManySerializer(serializers.ModelSerializer):
+    many_user = CustomUserCreateSerializer(many=True)
+
+    class Meta:
+        model = CreateUserMany
+        fields = '__all__'
+
+    # def create(self, validated_data):
+
+    #     users_emails_data = validated_data.pop('many_user')
+    #     user = CreateUserMany.objects.create(**validated_data)
+
+    #     for data in users_emails_data:
+    #         if 'id' in data:
+    #             id = data.pop('id')
+    #             model_item = User.objects.filter(
+    #                 id=id)
+    #             model_item.update(**data)
+    #             user_email_object = model_item.first()
+    #             print(id, user_email_object)
+    #         else:
+    #             user_email_object = User.objects.create(**data)
+    #         user.many_user.add(user_email_object)
+    #         user.save()
+    #     return user
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'phone', 'first_login']
+
+
+class LoginSerializer(serializers.Serializer):
+    phone = serializers.CharField()
+    password = serializers.CharField(
+        style={'input_type': 'password'}, trim_whitespace=False)
+
+    def validate(self, data):
+        print(data)
+        phone = data.get("phone")
+        password = data.get("password")
+
+        if phone and password:
+            if User.objects.filter(phone=phone).exists():
+                print(phone, password)
+                user = authenticate(request=self.context.get(
+                    'request'), phone=phone, password=password)
+                print(user)
+            else:
+                msg = {
+                    'detail': 'Phone number not found',
+                    'status': False
+                }
+                raise serializers.ValidationError(msg)
+            if not user:
+                msg = {
+                    'detail': 'Phone number and password are not matching, Try again',
+                    'status': False,
+                }
+                raise serializers.ValidationError(msg, code='authorization')
+
+        else:
+            msg = {
+                'detail': 'Phone number and password not found in request',
+                'status': False
+            }
+            raise serializers.ValidationError(msg, code='authorization')
+
+        data['user'] = user
+        return data

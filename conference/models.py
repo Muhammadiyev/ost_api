@@ -27,6 +27,11 @@ class Conference(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     protected = models.BooleanField(_('protected_conference'), default=True)
     status = models.BooleanField(_('public_conference'), default=True)
+    usersofroleofdepartments = models.ManyToManyField(
+        CustomUser, related_name="conference_of_users")
+    # @property
+    # def conference(self):
+    #     return self.confuser_of_conference
 
     def __str__(self):
         return "%s" % self.theme
@@ -41,7 +46,7 @@ class ConferenceUser(models.Model):
     status = models.BooleanField(_('status_user'), default=True)
 
     def __str__(self):
-        return "%s" % self.conference.theme
+        return "%s" % self.number_users
 
     # class Meta:
     #     verbose_name = 'Фирма'
