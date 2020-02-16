@@ -29,13 +29,13 @@ class ConferenceViewSet(viewsets.ModelViewSet):
     #     userIds = request.data.getlist('usersofroleofdepartments')
     #     phone_number = User.objects.filter(id__in=userIds).values_list('phone', flat=True)
     #     phone_numbers = list(phone_numbers)
+
     def create(self, request, *args, **kwargs):
         userIds = request.data.getlist('usersofroleofdepartments')
-        phone_list = User.objects.filter(id__in=userIds)
-        phone_number = [phone.phone for phone in phone_list]
-
+        phone = User.objects.filter(
+            id__in=userIds).values_list('phone', flat=True)
+        phone_number = list(phone)
         print(phone_number)
-
         if phone_number:
             phone = str(phone_number)
             user = User.objects.filter(phone__iexact=phone)

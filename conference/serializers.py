@@ -4,7 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
 from .models import TypeConf, Conference, ConferenceUser
 # from users.models import CustomUser
-from users.serializers import UserOfConferenceSerializer
+from users.serializers import UserOfConferenceSerializer, CustomUserCreateSerializer
 
 User = get_user_model()
 
@@ -17,7 +17,7 @@ class TypeConfSerializer(serializers.ModelSerializer):
 
 
 class ConferenceSerializer(serializers.ModelSerializer):
-
+    #usersofroleofdepartments = CustomUserCreateSerializer(many=True, required=False)
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'discussion', 'when', 'duration', 'typeconf',

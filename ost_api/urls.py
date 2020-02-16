@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls', namespace='users')),
     path('api/v1/', include('company.urls')),
-    path('api/v1/', include('conference.urls')),
+    path('api/v1/', include('conference.urls', namespace='conference')),
     path('api/v1/', include('groups.urls')),
     path('api/v1/', include('uploaded_choices.urls')),
 
