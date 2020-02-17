@@ -10,7 +10,8 @@ from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import authentication
-from users.models import PhoneOTP
+from rest_framework.views import APIView
+from otp.models import PhoneOTP
 import random
 
 User = get_user_model()
@@ -25,54 +26,31 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
 
-    # def create(self, request, *args, **kwargs):
-    #     userIds = request.data.getlist('usersofroleofdepartments')
-    #     phone_number = User.objects.filter(id__in=userIds).values_list('phone', flat=True)
-    #     phone_numbers = list(phone_numbers)
-
     def create(self, request, *args, **kwargs):
         userIds = request.data.getlist('usersofroleofdepartments')
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
-        print(phone_number)
-        if phone_number:
-            phone = str(phone_number)
-            user = User.objects.filter(phone__iexact=phone)
-            if user.exists():
-                return Response({'status': False, 'detail': 'phone number already exist'})
-            else:
+        # print(phone_number)
+
+        if len(phone_number) != 0:
+            for ph in phone_number:
+                # print(ph)
+                phone = str(ph)
+                user = User.objects.filter(phone__iexact=phone)
                 key = send_otp(phone)
                 if key:
-                    old = PhoneOTP.objects.filter(phone__iexact=phone)
-                    if old.exists():
-                        old = old.first()
-                        count = old.count
-                        if count > 10:
-                            return Response({
-                                'status': False,
-                                'detail': 'Sending otp error. Limit exceeded. Please contact customer support.'
-                            })
+                    PhoneOTP.objects.create(
+                        phone=phone,
+                        otp=key
+                    )
 
-                        old.count = count + 1
-                        old.save()
-                        print('count increase', count)
-                        return Response({
-                            'status': True,
-                            'detail': 'OTP sent successfully'
-                        })
-                    else:
-
-                        PhoneOTP.objects.create(
-                            phone=phone,
-                            otp=key
-                        )
-                        return Response({
-                            'status': True,
-                            'detail': 'OTP sent successfully'
-                        })
                 else:
                     return Response({'status': False, 'detail': 'Sending otp error'})
+            return Response({
+                'status': True,
+                'detail': 'OTP sent successfully'
+            })
         else:
             return Response({'status': False, 'detail': 'Phone number is not given in post request'})
 

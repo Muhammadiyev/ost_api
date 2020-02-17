@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
+    'otp.apps.OtpConfig',
     'company.apps.CompanyConfig',
     'conference.apps.ConferenceConfig',
     'news.apps.NewsConfig',

@@ -15,7 +15,7 @@ from django.dispatch import receiver
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    login = models.CharField(max_length=50,blank=True)
+    login = models.CharField(max_length=50, blank=True)
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField('First Name', max_length=255, blank=True,
                                   null=False)
@@ -35,15 +35,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_at = models.DateTimeField(null=False, default=now)
     role = models.ForeignKey(
-        Role, blank=True, null=True,related_name="user_of_role", on_delete=models.CASCADE)
+        Role, blank=True, null=True, related_name="user_of_role", on_delete=models.CASCADE)
     department = models.ForeignKey(
-        Department, blank=True, null=True,related_name="user_of_department", on_delete=models.CASCADE)
+        Department, blank=True, null=True, related_name="user_of_department", on_delete=models.CASCADE)
     parent = models.ForeignKey(
         'self', blank=True, null=True, on_delete=models.CASCADE)
     status = models.BooleanField(_('status_user'), default=True)
     conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
-        'company.Company', blank=True, null=True,related_name="user_of_company", on_delete=models.CASCADE)
+        'company.Company', blank=True, null=True, related_name="user_of_company", on_delete=models.CASCADE)
 
     objects = UserManager()
 
@@ -65,14 +65,3 @@ class CreateUserMany(models.Model):
     many_user = models.ManyToManyField(CustomUser)
     created_at = models.DateTimeField(null=False, default=now)
     is_active = models.BooleanField(_('active'), default=True)
-
-
-class PhoneOTP(AbstractBaseUser):
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,14}$', message="Phone number   must be entered in the format: '+999999999'. Up to 14 digits allowed.")
-    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, unique=True)
-    otp = models.CharField(max_length=9, blank=True, null=True)
-    count = models.IntegerField(default=0, help_text='Number of otp sent')
-    validated = models.BooleanField(default=False, help_text='If it is true, that means user have validate otp correctly in second API')
-
-    def __str__(self):
-        return str(self.phone) + 'is sent ' + str(self.otp)

@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model, password_validation,authenticate
+from django.contrib.auth import get_user_model, password_validation, authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
@@ -30,7 +30,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['login', settings.LOGIN_FIELD, 'password', 'company',
-                  'parent','phone', 'role', 'department', 'status', 'conference', 'auth_token']
+                  'parent', 'phone', 'role', 'department', 'status', 'conference', 'auth_token']
         read_only_fields = ('id', 'is_active', 'is_staff')
 
     def validate(self, attrs):
@@ -186,7 +186,7 @@ class CreateUsermanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreateUserMany
-        fields = ['id','many_user']
+        fields = ['id', 'many_user']
 
 
 class CreateUserManySerializer(serializers.ModelSerializer):
@@ -214,7 +214,6 @@ class CreateUserManySerializer(serializers.ModelSerializer):
     #         user.many_user.add(user_email_object)
     #         user.save()
     #     return user
-
 
 
 class UserSerializer(serializers.ModelSerializer):
