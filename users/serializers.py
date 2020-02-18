@@ -25,7 +25,8 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
 
     def get_auth_token(self, obj):
-        return tokens.get_token_for_user(obj, "authentication")
+        token, created = Token.objects.get_or_create(user=obj)
+        return token.key
 
     class Meta:
         model = User
@@ -96,7 +97,7 @@ class UserOfRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'first_name', 'last_name', 'midname',
-                  'phone_number', 'last_seen', 'city', 'avatar', 'is_active', 'role']
+                  'phone', 'last_seen', 'city', 'avatar', 'is_active','parent', 'role']
 
 
 class UserOfConferenceSerializer(serializers.ModelSerializer):
@@ -114,7 +115,8 @@ class AuthUserSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
 
     def get_auth_token(self, obj):
-        return tokens.get_token_for_user(obj, "authentication")
+        token, created = Token.objects.get_or_create(user=obj)
+        return token.key
 
     class Meta:
         model = User
@@ -155,16 +157,16 @@ class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['parent', 'company', 'department']
+        fields = ['id','login', 'email', 'parent', 'company', 'department']
 
 
-# class UserOfRoleSerializer(serializers.ModelSerializer):
+class UserOfRoleSerializer(serializers.ModelSerializer):
 
-#     role = RoleSerializer(read_only=True)
+    role = RoleSerializer(read_only=True)
 
-#     class Meta:
-#         model = User
-#         fields = ['parent', 'company', 'role']
+    class Meta:
+        model = User
+        fields = ['id','login', 'email', 'parent', 'company', 'role']
 
 
 class UserOfParentSerializer(serializers.ModelSerializer):

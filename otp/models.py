@@ -20,6 +20,6 @@ class PhoneOTP(AbstractBaseUser):
     otp = models.CharField(max_length=9, blank=True, null=True)
     validated = models.BooleanField(
         default=False, help_text='If it is true, that means user have validate otp correctly in second API')
-
+    
     def __str__(self):
         return str(self.phone) + 'is sent ' + str(self.otp)

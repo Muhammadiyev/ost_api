@@ -17,7 +17,7 @@ class TypeConfSerializer(serializers.ModelSerializer):
 
 
 class ConferenceSerializer(serializers.ModelSerializer):
-    #usersofroleofdepartments = CustomUserCreateSerializer(many=True, required=False)
+
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'discussion', 'when', 'duration', 'typeconf',

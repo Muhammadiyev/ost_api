@@ -28,10 +28,8 @@ class Conference(models.Model):
     protected = models.BooleanField(_('protected_conference'), default=True)
     status = models.BooleanField(_('public_conference'), default=True)
     usersofroleofdepartments = models.ManyToManyField(
-        CustomUser, related_name="conference_of_users")
-    # @property
-    # def conference(self):
-    #     return self.confuser_of_conference
+        CustomUser, blank=True, related_name="conference_of_users")
+
 
     def __str__(self):
         return "%s" % self.theme

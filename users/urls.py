@@ -4,9 +4,9 @@ from django.urls import path, include, re_path
 from .views import (
     UserAllViewSet,
     AuthViewSet,
-    UserOfRoleSerializerViewSet,
+    UserOfRoleViewSet,
     UserOfDepartmentViewSet,
-    UserOfParentSerializerViewSet,
+    UserOfParentViewSet,
     #ValidatePhoneSendOTP, 
     #ValidateOTP, 
 )
@@ -17,14 +17,8 @@ from .views import (
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('api/auth', AuthViewSet, basename='auth')
 router.register('userofdepartment', UserOfDepartmentViewSet, basename='auth')
-router.register('userofrole', UserOfRoleSerializerViewSet, basename='auth')
-router.register('userofparent', UserOfParentSerializerViewSet, basename='auth')
+router.register('userofrole', UserOfRoleViewSet, basename='auth')
+router.register('userofparent', UserOfParentViewSet, basename='auth')
 router.register('users', UserAllViewSet)
 
 urlpatterns = router.urls
-
-
-# urlpatterns = [
-#     re_path(r'^validate_phone/', ValidatePhoneSendOTP.as_view()),
-#     re_path('^validate_otp/$', ValidateOTP.as_view()),
-# ]

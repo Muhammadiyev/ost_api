@@ -78,9 +78,10 @@ class UserOfDepartmentViewSet(viewsets.ModelViewSet):
     filter_fields = ['parent', 'company']
 
 
-class UserOfRoleSerializerViewSet(viewsets.ModelViewSet):
+class UserOfRoleViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = User.objects.all()
+    ordering = ('parent')
     serializer_class = serializers.UserOfRoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
@@ -88,7 +89,7 @@ class UserOfRoleSerializerViewSet(viewsets.ModelViewSet):
     filter_fields = ['parent', 'company']
 
 
-class UserOfParentSerializerViewSet(viewsets.ModelViewSet):
+class UserOfParentViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = User.objects.all()
     serializer_class = serializers.UserOfParentSerializer

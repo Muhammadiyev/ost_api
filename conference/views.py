@@ -10,11 +10,32 @@ from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import authentication
+from django.core.mail import EmailMessage, send_mail, EmailMultiAlternatives
 from rest_framework.views import APIView
+from django.conf import settings
 from otp.models import PhoneOTP
 import random
+from django.template.loader import render_to_string
 
 User = get_user_model()
+
+
+def send_email(email, user):
+    
+    context = {
+        'conference': Conference.objects.filter().order_by('-created_at').first()
+    }
+    email_html_message = render_to_string('email/send_email.html', context)
+    email_plaintext_message = render_to_string('email/send_email.txt', context)
+    email = EmailMultiAlternatives(
+        'your colleagues created a video confession',
+        email_html_message,
+        settings.DEFAULT_FROM_EMAIL,
+        email,
+        # reply_to=(email,),
+    )
+    email.attach_alternative(email_html_message, "text/html")
+    email.send()
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
@@ -44,15 +65,18 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                         phone=phone,
                         otp=key
                     )
-
                 else:
                     return Response({'status': False, 'detail': 'Sending otp error'})
-            return Response({
-                'status': True,
-                'detail': 'OTP sent successfully'
-            })
-        else:
-            return Response({'status': False, 'detail': 'Phone number is not given in post request'})
+
+        response = super(ConferenceViewSet, self).create(
+            request, *args, **kwargs)
+
+        email = User.objects.filter(
+            id__in=userIds).values_list('email', flat=True)
+        #print(request.data['user'])
+        print(request.data)
+        send_email(email,user)
+        return Response({'status': True, 'detail': 'OTP EMAIL sent successfully'})
 
 
 def send_otp(phone):

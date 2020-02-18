@@ -1,4 +1,3 @@
-templates/
 db.sqlite3
 Pipfile.lock
 venv
