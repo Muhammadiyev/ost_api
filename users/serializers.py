@@ -15,6 +15,12 @@ from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUser
 User = get_user_model()
 
 
+class RecursiveSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
+
 class CustomUserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         style={"input_type": "password"}, write_only=True)
@@ -92,12 +98,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
                   'phone', 'last_seen', 'city', 'avatar', 'is_active']
 
 
-class UserOfRoleSerializer(serializers.ModelSerializer):
+class UserRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'first_name', 'last_name', 'midname',
-                  'phone', 'last_seen', 'city', 'avatar', 'is_active','parent', 'role']
+        fields = ['id', 'login', 'email', 'parent',
+                  'company', 'department', 'role']
 
 
 class UserOfConferenceSerializer(serializers.ModelSerializer):
@@ -154,35 +160,35 @@ class PasswordChangeSerializer(serializers.Serializer):
 class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     department = DepartmentSerializer(read_only=True)
+    subparent = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
-        fields = ['id','login', 'email', 'parent', 'company', 'department']
+        fields = ['id', 'login', 'email', 'department',
+                  'parent', 'subparent', 'company']
+
+
+class UserOfRoleSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer(read_only=True)
+    role = RoleSerializer(read_only=True)
+    subparent = RecursiveSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'login', 'email', 'department',
+                  'role', 'parent', 'company', 'subparent']
 
 
 class UserOfRoleSerializer(serializers.ModelSerializer):
 
     role = RoleSerializer(read_only=True)
+    subparent = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
-        fields = ['id','login', 'email', 'parent', 'company', 'role']
+        fields = ['id', 'login', 'email', 'role',
+                  'parent', 'subparent', 'company', ]
 
-
-class UserOfParentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ['id', 'parent', 'company', 'login', 'email', ]
-
-# class RecursiveSerializer(serializers.Serializer):
-
-#     def to_representation(self, value):
-#         serializer = self.parent.parent.__class__(value, context=self.context)
-#         return serializer.data
-
-
-#     children = RecursiveSerializer(read_only=True, many=True)
 
 class CreateUsermanySerializer(serializers.ModelSerializer):
 
@@ -197,25 +203,6 @@ class CreateUserManySerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateUserMany
         fields = '__all__'
-
-    # def create(self, validated_data):
-
-    #     users_emails_data = validated_data.pop('many_user')
-    #     user = CreateUserMany.objects.create(**validated_data)
-
-    #     for data in users_emails_data:
-    #         if 'id' in data:
-    #             id = data.pop('id')
-    #             model_item = User.objects.filter(
-    #                 id=id)
-    #             model_item.update(**data)
-    #             user_email_object = model_item.first()
-    #             print(id, user_email_object)
-    #         else:
-    #             user_email_object = User.objects.create(**data)
-    #         user.many_user.add(user_email_object)
-    #         user.save()
-    #     return user
 
 
 class UserSerializer(serializers.ModelSerializer):

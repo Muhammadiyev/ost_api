@@ -39,7 +39,7 @@ def send_email(email, user):
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -88,7 +88,7 @@ def send_otp(phone):
 
 
 class ConferenceUserViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = ConferenceUser.objects.all()
     serializer_class = serializers.ConferenceUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -98,7 +98,7 @@ class ConferenceUserViewSet(viewsets.ModelViewSet):
 
 
 class TypeConfViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = TypeConf.objects.all()
     serializer_class = serializers.TypeConfSerializer
     authentication_classes = [authentication.TokenAuthentication, ]

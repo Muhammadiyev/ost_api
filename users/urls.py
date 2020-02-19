@@ -4,21 +4,18 @@ from django.urls import path, include, re_path
 from .views import (
     UserAllViewSet,
     AuthViewSet,
-    UserOfRoleViewSet,
+    UserOfRoleOfDepartmentViewSet,
     UserOfDepartmentViewSet,
-    UserOfParentViewSet,
-    #ValidatePhoneSendOTP, 
-    #ValidateOTP, 
+    UserOfRoleOfViewSet,
 )
 
-
-# app_name = 'users'
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('api/auth', AuthViewSet, basename='auth')
 router.register('userofdepartment', UserOfDepartmentViewSet, basename='auth')
-router.register('userofrole', UserOfRoleViewSet, basename='auth')
-router.register('userofparent', UserOfParentViewSet, basename='auth')
+router.register('userofroleofdepartment',
+                UserOfRoleOfDepartmentViewSet, basename='auth')
+router.register('userofrole', UserOfRoleOfViewSet, basename='auth')
 router.register('users', UserAllViewSet)
 
 urlpatterns = router.urls

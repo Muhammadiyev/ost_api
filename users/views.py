@@ -16,7 +16,6 @@ from django.http.response import HttpResponse
 from rest_framework import permissions, static, generics
 from django.shortcuts import get_object_or_404
 import random
-
 User = get_user_model()
 
 
@@ -59,7 +58,7 @@ class AuthViewSet(viewsets.GenericViewSet):
 
 
 class UserAllViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -69,7 +68,7 @@ class UserAllViewSet(viewsets.ModelViewSet):
 
 
 class UserOfDepartmentViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.UserOfDepartmentSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -78,10 +77,9 @@ class UserOfDepartmentViewSet(viewsets.ModelViewSet):
     filter_fields = ['parent', 'company']
 
 
-class UserOfRoleViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+class UserOfRoleOfViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
-    ordering = ('parent')
     serializer_class = serializers.UserOfRoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
@@ -89,24 +87,11 @@ class UserOfRoleViewSet(viewsets.ModelViewSet):
     filter_fields = ['parent', 'company']
 
 
-class UserOfParentViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
-    serializer_class = serializers.UserOfParentSerializer
+    serializer_class = serializers.UserOfRoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
-
-
-# class CreateUserManyViewSet(viewsets.ModelViewSet):
-#     permission_classes = []
-#     queryset = CreateUserMany.objects.all()
-#     serializer_class = serializers.CreateUsermanySerializer
-#     authentication_classes = [authentication.TokenAuthentication, ]
-
-    # def get_serializer_class(self):
-    #     serializer_class = serializers.CreateUsermanySerializer
-    #     if self.action in ['create', 'update', 'partial_update']:
-    #         serializer_class = serializers.CreateUserManySerializer
-    #     return serializer_class
