@@ -12,5 +12,3 @@ router.register('conferenceoff', ConferenceViewSet)
 router.register('conferenceuser', ConferenceUserViewSet)
 
 urlpatterns = router.urls
-
-

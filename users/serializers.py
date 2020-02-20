@@ -168,7 +168,7 @@ class UserOfDepartmentSerializer(serializers.ModelSerializer):
                   'parent', 'subparent', 'company']
 
 
-class UserOfRoleSerializer(serializers.ModelSerializer):
+class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     role = RoleSerializer(read_only=True)
     subparent = RecursiveSerializer(read_only=True, many=True)

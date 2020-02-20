@@ -9,13 +9,13 @@
     <title>Document</title>
 </head>
 <body>
-   
+    {% for conference in client %}
     {{ conference.theme }}
     {{ conference.discussion }}
     {{ conference.duration }}
-    {{ conference.start_time|start_time:"d E Y"  }}
+    {{ conference.start_time }}
     {{ conference.user.email }}
     {{ conference.typeconf.name }}
-  
+    {% endfor %}
 </body>
 </html>

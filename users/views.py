@@ -90,7 +90,7 @@ class UserOfRoleOfViewSet(viewsets.ModelViewSet):
 class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
-    serializer_class = serializers.UserOfRoleSerializer
+    serializer_class = serializers.UserOfRoleOfDepartmentRoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)

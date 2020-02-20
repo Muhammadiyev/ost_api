@@ -17,11 +17,13 @@ from otp.models import PhoneOTP
 import random
 from django.template.loader import render_to_string
 
+import requests
+
 User = get_user_model()
 
 
 def send_email(email, user):
-    
+
     context = {
         'conference': Conference.objects.filter().order_by('-created_at').first()
     }
@@ -39,7 +41,7 @@ def send_email(email, user):
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -73,9 +75,8 @@ class ConferenceViewSet(viewsets.ModelViewSet):
 
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
-        #print(request.data['user'])
-        print(request.data)
-        send_email(email,user)
+        # print(request.data['user'])
+        send_email(email, user)
         return Response({'status': True, 'detail': 'OTP EMAIL sent successfully'})
 
 
