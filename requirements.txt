@@ -1,5 +1,7 @@
 autopep8==1.5
 Babel==2.8.0
+certifi==2019.11.28
+chardet==3.0.4
 Django==2.2.7
 django-cors-headers==3.2.1
 django-filter==2.2.0
@@ -11,10 +13,14 @@ django-templated-mail==1.1.1
 djangorestframework==3.11.0
 djangorestframework-jwt==1.11.0
 djoser==2.0.3
+gunicorn==20.0.4
+idna==2.9
 phonenumbers==8.11.2
-Pillow
+Pillow==7.0.0
+pkg-resources==0.0.0
 pycodestyle==2.5.0
 PyJWT==1.7.1
 pytz==2019.3
+requests==2.23.0
 sqlparse==0.3.0
-gunicorn
+urllib3==1.25.8

@@ -176,7 +176,7 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'department',
-                  'role', 'parent', 'company', 'subparent']
+                  'parent', 'company', 'role',  'subparent']
 
 
 class UserOfRoleSerializer(serializers.ModelSerializer):

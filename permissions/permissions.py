@@ -12,18 +12,19 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 class UserHasPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            if request.user ==  'UserHasPermission':
-                return True
-        return False
+        return request.user and request.user.is_authenticated
+
+    # for object level permissions
+    def has_object_permission(self, request, view, vacation_obj):
+        return vacation_obj.company.id == request.user.id
 
 
 class IsAdminOrCourierOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
             return True
-        # parcel = Parcel.objects.get(id=obj.id)
-        order = CustomUser.objects.get(id=obj.id)
+        parent = Parcel.objects.get(id=obj.id)
+        order = CustomUser.objects.get(parent=parent)
         if request.user.user_type == 'COURIER':
             if order.courier.id == request.user.id:
                 return True

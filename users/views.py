@@ -15,6 +15,7 @@ from rest_framework.views import APIView
 from django.http.response import HttpResponse
 from rest_framework import permissions, static, generics
 from django.shortcuts import get_object_or_404
+from permissions.permissions import UserHasPermission
 import random
 User = get_user_model()
 
@@ -95,3 +96,32 @@ class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
+
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         # vacations can be seen by anyone
+    #         # remember to remove the filter for list though
+    #         permission_classes = [IsAuthenticated] 
+
+    #         # or maybe that special type of user you mentioned
+    #         # write a `IsSpecialUser` permission class first btw
+    #         permission_classes = [IsAdminUser] 
+    #     else:
+    #         permission_classes = [UserHasPermission]
+
+    #     return [permission() for permission in permission_classes]
+
+    # def get_serializer_class(self):
+    #     serializer_class = OrderSerializer
+    #     if self.action in ['put', 'partial_update']:
+    #         serializer_class = OrderUpdateSerializer
+    #     return serializer_class
+
+    # def get_permissions(self):
+    #     if self.action in ['list', 'retrieve']:
+    #         permission_classes = [IsAuthenticated, (IsAdminUser | UserHasPermission)]
+    #     elif self.action in ['update', 'partial_update', 'destroy']:
+    #         permission_classes = [IsAuthenticated, (IsAdminUser | UserHasPermission)]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
