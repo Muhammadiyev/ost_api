@@ -89,7 +89,6 @@ class UserOfRoleOfViewSet(viewsets.ModelViewSet):
 
 
 class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.UserOfRoleOfDepartmentRoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -97,19 +96,14 @@ class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
 
-    # def get_permissions(self):
-    #     if self.action == 'list':
-    #         # vacations can be seen by anyone
-    #         # remember to remove the filter for list though
-    #         permission_classes = [IsAuthenticated] 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
 
-    #         # or maybe that special type of user you mentioned
-    #         # write a `IsSpecialUser` permission class first btw
-    #         permission_classes = [IsAdminUser] 
-    #     else:
-    #         permission_classes = [UserHasPermission]
-
-    #     return [permission() for permission in permission_classes]
+        return [permission() for permission in permission_classes]
 
     # def get_serializer_class(self):
     #     serializer_class = OrderSerializer

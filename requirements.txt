@@ -16,8 +16,7 @@ djoser==2.0.3
 gunicorn==20.0.4
 idna==2.9
 phonenumbers==8.11.2
-Pillow==7.0.0
-pkg-resources==0.0.0
+Pillow
 pycodestyle==2.5.0
 PyJWT==1.7.1
 pytz==2019.3

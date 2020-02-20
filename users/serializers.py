@@ -127,7 +127,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name',
-                  'last_name', 'is_active', 'is_staff', 'auth_token')
+                  'last_name', 'is_active', 'is_staff','company', 'auth_token')
         read_only_fields = ('id', 'is_active', 'is_staff')
 
 
