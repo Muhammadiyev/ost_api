@@ -15,6 +15,7 @@ User = get_user_model()
 
 
 class RoleViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Role.objects.all()
     serializer_class = serializers.RoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -22,17 +23,18 @@ class RoleViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['user']
 
-    def get_permissions(self):
-        if self.action == 'list':
-            permission_classes = [IsAuthenticated]
-            permission_classes = [IsAdminUser]
-        else:
-            permission_classes = [UserHasPermission]
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         permission_classes = [IsAuthenticated]
+    #         permission_classes = [IsAdminUser]
+    #     else:
+    #         permission_classes = [UserHasPermission]
 
-        return [permission() for permission in permission_classes]
+    #     return [permission() for permission in permission_classes]
 
 
 class RoleOfUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Role.objects.all()
     serializer_class = serializers.RoleOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -40,17 +42,18 @@ class RoleOfUserViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['user']
 
-    def get_permissions(self):
-        if self.action == 'list':
-            permission_classes = [IsAuthenticated]
-            permission_classes = [IsAdminUser]
-        else:
-            permission_classes = [UserHasPermission]
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         permission_classes = [IsAuthenticated]
+    #         permission_classes = [IsAdminUser]
+    #     else:
+    #         permission_classes = [UserHasPermission]
 
-        return [permission() for permission in permission_classes]
+    #     return [permission() for permission in permission_classes]
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -58,17 +61,18 @@ class DepartmentViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['user']
 
-    def get_permissions(self):
-        if self.action == 'list':
-            permission_classes = [IsAuthenticated]
-            permission_classes = [IsAdminUser]
-        else:
-            permission_classes = [UserHasPermission]
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         permission_classes = [IsAuthenticated]
+    #         permission_classes = [IsAdminUser]
+    #     else:
+    #         permission_classes = [UserHasPermission]
 
-        return [permission() for permission in permission_classes]
+    #     return [permission() for permission in permission_classes]
 
 
 class DepartmentOfUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -76,11 +80,11 @@ class DepartmentOfUserViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['user']
 
-    def get_permissions(self):
-        if self.action == 'list':
-            permission_classes = [IsAuthenticated]
-            permission_classes = [IsAdminUser]
-        else:
-            permission_classes = [UserHasPermission]
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         permission_classes = [IsAuthenticated]
+    #         permission_classes = [IsAdminUser]
+    #     else:
+    #         permission_classes = [UserHasPermission]
 
-        return [permission() for permission in permission_classes]
+    #     return [permission() for permission in permission_classes]
