@@ -59,7 +59,6 @@ class AuthViewSet(viewsets.GenericViewSet):
 
 
 class UserAllViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -67,9 +66,16 @@ class UserAllViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
+
+        return [permission() for permission in permission_classes]
 
 class UserOfDepartmentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.UserOfDepartmentSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
@@ -77,16 +83,31 @@ class UserOfDepartmentViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
+
+        return [permission() for permission in permission_classes]
 
 class UserOfRoleOfViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.UserOfRoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
+    
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
 
+        return [permission() for permission in permission_classes]
 
 class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -105,17 +126,3 @@ class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
-    # def get_serializer_class(self):
-    #     serializer_class = OrderSerializer
-    #     if self.action in ['put', 'partial_update']:
-    #         serializer_class = OrderUpdateSerializer
-    #     return serializer_class
-
-    # def get_permissions(self):
-    #     if self.action in ['list', 'retrieve']:
-    #         permission_classes = [IsAuthenticated, (IsAdminUser | UserHasPermission)]
-    #     elif self.action in ['update', 'partial_update', 'destroy']:
-    #         permission_classes = [IsAuthenticated, (IsAdminUser | UserHasPermission)]
-    #     else:
-    #         permission_classes = [IsAuthenticated]
-    #     return [permission() for permission in permission_classes]

@@ -7,7 +7,15 @@ from users.models import CustomUser
 
 User = get_user_model()
 
+class DRecursiveSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
 
+class RRecursiveSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
 
 class CompanySerializer(serializers.ModelSerializer):
 
@@ -18,38 +26,29 @@ class CompanySerializer(serializers.ModelSerializer):
 
 class DepartmentSerializer(serializers.ModelSerializer):
 
-    #company = CompanySerializer(read_only=True)
 
     class Meta:
         model = Department
-        fields = ['id','department_name',
-                  'is_active', 'created_at']
+        fields = ['id','department_name']
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
-
-    #company = CompanySerializer(read_only=True)
+    subparent = DRecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = Department
-        fields = ['id','department_name','user_of_department',
-                  'is_active', 'created_at']
+        fields = ['id','user','parent','department_name','subparent']
+
+
+class RoleOfUserSerializer(serializers.ModelSerializer):
+    subparent = RRecursiveSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Role
+        fields = ['id','user','parent','name','subparent']
 
 
 class RoleSerializer(serializers.ModelSerializer):
 
-    #company = CompanySerializer()
-
     class Meta:
         model = Role
-        fields = ['id', 'name',
-                  'is_active', 'created_at']
-
-
-class RoleOfUserSerializer(serializers.ModelSerializer):
-    #user_of_department = UserOfDepartmentSerializer()
-    #company = CompanySerializer()
-
-    class Meta:
-        model = Role
-        fields = ['id', 'name', 'user_of_role',
-                  'is_active', 'created_at']
+        fields = ['id','name']

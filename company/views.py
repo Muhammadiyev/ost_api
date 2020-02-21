@@ -10,43 +10,77 @@ from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import authentication
+from permissions.permissions import UserHasPermission
 User = get_user_model()
 
 
 class RoleViewSet(viewsets.ModelViewSet):
-    permission_classes = []
     queryset = Role.objects.all()
     serializer_class = serializers.RoleSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    # filter_backends = (filters.DjangoFilterBackend,
-    #                    SearchFilter, OrderingFilter)
-    # filter_fields = ['company']
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['user']
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
+
+        return [permission() for permission in permission_classes]
 
 
 class RoleOfUserViewSet(viewsets.ModelViewSet):
-    permission_classes = []
     queryset = Role.objects.all()
     serializer_class = serializers.RoleOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    # filter_backends = (filters.DjangoFilterBackend,
-    #                    SearchFilter, OrderingFilter)
-    # filter_fields = ['company']
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['user']
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
+
+        return [permission() for permission in permission_classes]
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
-    permission_classes = []
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    # filter_backends = (filters.DjangoFilterBackend,
-    #                    SearchFilter, OrderingFilter)
-    # filter_fields = ['company']
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['user']
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
+
+        return [permission() for permission in permission_classes]
+
 
 class DepartmentOfUserViewSet(viewsets.ModelViewSet):
-    permission_classes = []
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
-    # filter_backends = (filters.DjangoFilterBackend,
-    #                    SearchFilter, OrderingFilter)
-    # filter_fields = ['company']
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['user']
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [UserHasPermission]
+
+        return [permission() for permission in permission_classes]
