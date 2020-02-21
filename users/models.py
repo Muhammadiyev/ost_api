@@ -44,11 +44,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
         'company.Company', blank=True, null=True, related_name="user_of_company", on_delete=models.CASCADE)
-
+    
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
     #REQUIRED_FIELDS = []
+
+    @property
+    def users(self):
+        return self.role_of_user
 
     def get_short_name(self):
         return self.phone

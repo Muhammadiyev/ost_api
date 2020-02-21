@@ -7,15 +7,18 @@ from users.models import CustomUser
 
 User = get_user_model()
 
+
 class DRecursiveSerializer(serializers.Serializer):
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
 
+
 class RRecursiveSerializer(serializers.Serializer):
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
+
 
 class CompanySerializer(serializers.ModelSerializer):
 
@@ -26,17 +29,18 @@ class CompanySerializer(serializers.ModelSerializer):
 
 class DepartmentSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Department
-        fields = ['id','department_name']
+        fields = ['id', 'user_of_department', 'department_name']
+
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
     subparent = DRecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = Department
-        fields = ['id','user','parent','department_name','subparent']
+        fields = ['id', 'user_of_department',
+                  'parent', 'department_name', 'subparent']
 
 
 class RoleOfUserSerializer(serializers.ModelSerializer):
@@ -44,11 +48,11 @@ class RoleOfUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id','user','parent','name','subparent']
+        fields = ['id', 'user_of_role', 'parent', 'name', 'subparent']
 
 
 class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id','name']
+        fields = ['id', 'user_of_role', 'name']

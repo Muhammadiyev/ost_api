@@ -21,7 +21,7 @@ class RoleViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['user']
+    filter_fields = ['user_of_role']
 
     # def get_permissions(self):
     #     if self.action == 'list':
@@ -40,7 +40,7 @@ class RoleOfUserViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['user']
+    filter_fields = ['user_of_role']
 
     # def get_permissions(self):
     #     if self.action == 'list':
@@ -59,7 +59,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['user']
+    filter_fields = ['user_of_department']
 
     # def get_permissions(self):
     #     if self.action == 'list':
@@ -78,7 +78,7 @@ class DepartmentOfUserViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['user']
+    filter_fields = ['user_of_department']
 
     # def get_permissions(self):
     #     if self.action == 'list':

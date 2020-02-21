@@ -9,6 +9,7 @@ from django.core import exceptions as django_exceptions
 from django.db import IntegrityError, transaction
 from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
+from company.models import Department
 from . import tokens
 from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUserSerializer
 
@@ -127,7 +128,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name',
-                  'last_name', 'is_active', 'is_staff','company', 'auth_token')
+                  'last_name', 'is_active', 'is_staff', 'company', 'auth_token')
         read_only_fields = ('id', 'is_active', 'is_staff')
 
 
@@ -250,3 +251,19 @@ class LoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+
+
+# class DepartSerializer(serializers.ModelSerializer):
+
+#     department = DepartmentSerializer(read_only=True)
+
+#     class Meta:
+#         model = User
+#         fields = ['id', 'department',]
+
+    # def create(self, validated_data):
+    #     department_data = validated_data.pop('department')
+    #     d = Department.objects.create(**department_data)
+    #     user = User.objects.create(department=d, **validated_data)
+    #     user.save()
+    #     return user
