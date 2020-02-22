@@ -25,7 +25,7 @@ class RoleViewSet(viewsets.ModelViewSet):
 
 
 class RoleOfUserViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Role.objects.all()
     serializer_class = serializers.RoleOfUserSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
