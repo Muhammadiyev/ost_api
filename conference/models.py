@@ -14,17 +14,17 @@ class TypeConf(models.Model):
 
 class Conference(models.Model):
     theme = models.CharField(max_length=100, blank=True, null=True)
-    discussion = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(null=False, default=now)
     user = models.ForeignKey(
         'users.CustomUser', on_delete=models.CASCADE, null=True, related_name="conference_of_user")
-    when = models.DateTimeField(auto_now_add=True)
+    when = models.DateTimeField()
     duration = DurationField()
+    not_limited = models.BooleanField(_('not_limited'), default=False)
     typeconf = models.ForeignKey(
         TypeConf, null=True, on_delete=models.CASCADE, related_name="conference_of_type")
     save_conf = models.BooleanField(_('save_conference'), default=False)
     start_time = models.TimeField(null=True, blank=True)
-    end_time = models.TimeField(null=True, blank=True)
     protected = models.BooleanField(_('protected_conference'), default=True)
     status = models.BooleanField(_('public_conference'), default=True)
     usersofroleofdepartments = models.ManyToManyField(

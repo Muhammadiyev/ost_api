@@ -20,8 +20,8 @@ class ConferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conference
-        fields = ['id', 'theme', 'discussion', 'when', 'duration', 'typeconf',
-                  'save_conf', 'start_time', 'end_time', 'protected', 'status', 'user','usersofroleofdepartments']
+        fields = ['id', 'theme', 'description', 'when','not_limited', 'duration', 'typeconf',
+                  'save_conf', 'start_time', 'protected', 'status', 'user','usersofroleofdepartments','created_at']
 
 
 class ConferenceUserSerializer(serializers.ModelSerializer):
