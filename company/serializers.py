@@ -31,7 +31,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ['id', 'user_of_department', 'department_name']
+        fields = ['id', 'department_name']
 
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
@@ -55,4 +55,4 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id', 'user_of_role', 'name']
+        fields = ['id', 'name']

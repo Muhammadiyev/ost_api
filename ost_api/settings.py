@@ -3,9 +3,9 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY','sdsd')
 
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -151,6 +151,8 @@ EMAIL_HOST_PASSWORD = 'linban.ru'
 EMAIL_USE_TLS = True
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+site_url = 'https:video.pager.uz/api/password_reset/confirm/'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),

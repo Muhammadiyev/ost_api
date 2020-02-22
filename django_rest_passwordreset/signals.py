@@ -4,8 +4,7 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.conf import settings
-
-
+from ost_api.settings import site_url
 __all__ = [
     'reset_password_token_created',
     'pre_password_reset',
@@ -40,7 +39,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'current_user': reset_password_token.user,
         # 'username': reset_password_token.user.username,
         'email': reset_password_token.user.email,
-        'reset_password_url': "{}?token={}".format(reverse('password_reset:reset_password_request'), reset_password_token.key)
+        'reset_password_url': "{} Ваш ключ для смени пароля={}".format(site_url, reset_password_token.key)
     }
 
     # render email text
