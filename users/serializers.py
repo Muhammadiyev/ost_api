@@ -161,34 +161,34 @@ class PasswordChangeSerializer(serializers.Serializer):
 class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     department = DepartmentSerializer(read_only=True)
-    subparent = RecursiveSerializer(read_only=True, many=True)
+    children = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'department',
-                  'parent', 'subparent', 'company']
+                  'parent', 'children', 'company']
 
 
 class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     role = RoleSerializer(read_only=True)
-    subparent = RecursiveSerializer(read_only=True, many=True)
+    children = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'department',
-                  'parent', 'company', 'role',  'subparent']
+                  'parent', 'company', 'role',  'children']
 
 
 class UserOfRoleSerializer(serializers.ModelSerializer):
 
     role = RoleSerializer(read_only=True)
-    subparent = RecursiveSerializer(read_only=True, many=True)
+    children = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = ['id', 'login', 'email', 'role',
-                  'parent', 'subparent', 'company', ]
+                  'parent', 'children', 'company', ]
 
 
 class CreateUsermanySerializer(serializers.ModelSerializer):

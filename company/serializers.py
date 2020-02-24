@@ -35,20 +35,20 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
-    subparent = DRecursiveSerializer(read_only=True, many=True)
+    children = DRecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = Department
         fields = ['id', 'user_of_department',
-                  'parent', 'department_name', 'subparent']
+                  'parent', 'department_name', 'children']
 
 
 class RoleOfUserSerializer(serializers.ModelSerializer):
-    subparent = RRecursiveSerializer(read_only=True, many=True)
+    children = RRecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = Role
-        fields = ['id', 'user_of_role', 'parent', 'name', 'subparent']
+        fields = ['id', 'user_of_role', 'parent', 'name', 'children']
 
 
 class RoleSerializer(serializers.ModelSerializer):

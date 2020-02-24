@@ -39,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     department = models.ForeignKey(
         Department, blank=True, null=True, related_name="user_of_department", on_delete=models.CASCADE)
     parent = models.ForeignKey(
-        'self', blank=True, null=True,related_name='subparent', on_delete=models.CASCADE)
+        'self', blank=True, null=True,related_name='children', on_delete=models.CASCADE)
     status = models.BooleanField(_('status_user'), default=True)
     conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
