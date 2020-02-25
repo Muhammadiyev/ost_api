@@ -9,13 +9,13 @@
     <title>Document</title>
 </head>
 <body>
-    {% for conference in client %}
+    <a href="http://127.0.0.1:8000/api/v1/conferenceoff/{{ conference.id }}">Перейти на конференцию когда </a> {{ conference.start_time }}
     {{ conference.theme }}
     {{ conference.discussion }}
     {{ conference.duration }}
-    {{ conference.start_time }}
     {{ conference.user.email }}
     {{ conference.typeconf.name }}
-    {% endfor %}
+   
+
 </body>
 </html>

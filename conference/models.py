@@ -18,8 +18,8 @@ class Conference(models.Model):
     created_at = models.DateTimeField(null=False, default=now)
     user = models.ForeignKey(
         'users.CustomUser', on_delete=models.CASCADE, null=True, related_name="conference_of_user")
-    when = models.DateTimeField()
-    duration = DurationField()
+    when = models.DateTimeField(blank=True,null=True)
+    duration = DurationField(blank=True, null=True)
     not_limited = models.BooleanField(_('not_limited'), default=False)
     typeconf = models.ForeignKey(
         TypeConf, null=True, on_delete=models.CASCADE, related_name="conference_of_type")

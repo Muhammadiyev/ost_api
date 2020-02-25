@@ -12,25 +12,14 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 class UserHasPermission(permissions.BasePermission):
     def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
         return request.user and request.user.is_authenticated
 
-    # for object level permissions
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
             return True
         return obj.role.id == request.user.id
-
-    # def has_object_permission(self, request, view, obj):
-    #     if request.user.is_staff:
-    #         return True
-    #     user = CustomUser.objects.get(pk=view.kwargs['pk'])
-    #     if request.user == user:
-    #         return True
-    #        # if have more condition then apply
-    #     more_condition = 'У вас нет прав для выполнения этой операции.'
-    #     if more_condition:
-    #         return False
-    #     return False
 
 
 class IsAdminOrCourierOwner(permissions.BasePermission):
