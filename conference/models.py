@@ -3,7 +3,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from users.models import CustomUser
 from django.db.models import DurationField
-
+import pytz
 
 class TypeConf(models.Model):
     name = models.CharField(max_length=100, blank=True)
@@ -19,6 +19,9 @@ class Conference(models.Model):
     user = models.ForeignKey(
         'users.CustomUser', on_delete=models.CASCADE, null=True, related_name="conference_of_user")
     when = models.DateTimeField(blank=True,null=True)
+    TIMEZONES = tuple(zip(pytz.all_timezones, pytz.all_timezones))
+    timezone = models.CharField(max_length=32, choices=TIMEZONES, 
+    default='Asia/Tashkent')
     duration = DurationField(blank=True, null=True)
     not_limited = models.BooleanField(_('not_limited'), default=False)
     typeconf = models.ForeignKey(
