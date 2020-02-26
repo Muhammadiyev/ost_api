@@ -23,7 +23,7 @@ class Conference(models.Model):
     duration = DurationField(blank=True, null=True)
     not_limited = models.BooleanField(_('not_limited'), default=False)
     typeconf = models.ForeignKey(
-        TypeConf, null=True, on_delete=models.CASCADE, related_name="conference_of_type")
+        TypeConf, blank=True, on_delete=models.CASCADE, related_name="conference_of_type")
     save_conf = models.BooleanField(_('save_conference'), default=False)
     start_time = models.CharField(max_length=100,blank=True)
     protected = models.BooleanField(_('protected_conference'), default=True)
