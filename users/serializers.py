@@ -11,7 +11,7 @@ from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
 from company.models import Department
 from . import tokens
-from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUserSerializer
+from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUserSerializer, CompanySerializer
 
 User = get_user_model()
 
@@ -92,6 +92,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     role = RoleOfUserSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
+    company = CompanySerializer(read_only=True)
 
     class Meta:
         model = User
