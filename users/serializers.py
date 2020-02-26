@@ -169,6 +169,11 @@ class UserOfDepartmentSerializer(serializers.ModelSerializer):
         fields = ['id', 'login', 'email', 'department',
                   'parent', 'children', 'company']
 
+class UserOfConfSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'login', 'email']
 
 class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
@@ -254,17 +259,3 @@ class LoginSerializer(serializers.Serializer):
         return data
 
 
-# class DepartSerializer(serializers.ModelSerializer):
-
-#     department = DepartmentSerializer(read_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = ['id', 'department',]
-
-    # def create(self, validated_data):
-    #     department_data = validated_data.pop('department')
-    #     d = Department.objects.create(**department_data)
-    #     user = User.objects.create(department=d, **validated_data)
-    #     user.save()
-    #     return user
