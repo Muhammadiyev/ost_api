@@ -18,14 +18,14 @@ class Conference(models.Model):
     created_at = models.DateTimeField(null=False, default=now)
     user = models.ForeignKey(
         'users.CustomUser', on_delete=models.CASCADE, null=True, related_name="conference_of_user")
-    when = models.DateTimeField(blank=True,null=True)
+    when = models.CharField(max_length=100,blank=True)
     timezone = models.CharField(max_length=100,blank=True)
     duration = DurationField(blank=True, null=True)
     not_limited = models.BooleanField(_('not_limited'), default=False)
     typeconf = models.ForeignKey(
         TypeConf, null=True, on_delete=models.CASCADE, related_name="conference_of_type")
     save_conf = models.BooleanField(_('save_conference'), default=False)
-    start_time = models.TimeField(null=True, blank=True)
+    start_time = models.CharField(max_length=100,blank=True)
     protected = models.BooleanField(_('protected_conference'), default=True)
     status = models.BooleanField(_('public_conference'), default=True)
     usersofroleofdepartments = models.ManyToManyField(

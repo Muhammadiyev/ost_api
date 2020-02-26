@@ -41,7 +41,7 @@ def send_email(email):
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
