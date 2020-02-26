@@ -13,6 +13,9 @@ class Company(models.Model):
     def __str__(self):
         return "%s" % self.name
 
+    @property
+    def users(self):
+        return self.user_of_company
 
 class Role(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)

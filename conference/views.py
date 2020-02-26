@@ -22,7 +22,7 @@ import requests
 User = get_user_model()
 
 
-def send_email(email, user):
+def send_email(email):
 
     context = {
         'conference': Conference.objects.filter().order_by('-created_at').first()
@@ -50,34 +50,25 @@ class ConferenceViewSet(viewsets.ModelViewSet):
     filter_fields = ['typeconf', 'user']
 
     def create(self, request, *args, **kwargs):
-        userIds = request.data.getlist('usersofroleofdepartments')
+        response = super(ConferenceViewSet, self).create(
+            request, *args, **kwargs)
+        userIds = request.data['usersofroleofdepartments']
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
-        # print(phone_number)
 
         if len(phone_number) != 0:
             for ph in phone_number:
-                # print(ph)
                 phone = str(ph)
                 user = User.objects.filter(phone__iexact=phone)
                 key = send_otp(phone)
                 if key:
-                    PhoneOTP.objects.create(
-                        phone=phone,
-                        otp=key
-                    )
-                else:
-                    return Response({'status': False, 'detail': 'Sending otp error'})
-
-        response = super(ConferenceViewSet, self).create(
-            request, *args, **kwargs)
+                    PhoneOTP.objects.create(phone=phone, otp=key)
 
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
-        # print(request.data['user'])
-        send_email(email, user)
-        return Response({'status': True, 'detail': 'OTP EMAIL sent successfully'})
+        send_email(email)
+        return response
 
 
 def send_otp(phone):

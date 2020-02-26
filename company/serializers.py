@@ -24,7 +24,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = '__all__'
+        fields = ['id', 'name', 'image','user_of_company']
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
