@@ -70,13 +70,22 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         send_email(email)
         return response
 
-
 def send_otp(phone):
     if phone:
         key = random.randint(9999, 99999)
         return key
     else:
         return False
+
+
+class ConferenceGetViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConferenceGetSerializer
+    authentication_classes = [authentication.TokenAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['typeconf', 'user']
 
 
 class ConferenceUserViewSet(viewsets.ModelViewSet):

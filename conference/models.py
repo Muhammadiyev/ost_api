@@ -13,11 +13,11 @@ class TypeConf(models.Model):
 
 
 class Conference(models.Model):
-    theme = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    theme = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(null=False, default=now)
     user = models.ForeignKey(
-        'users.CustomUser', on_delete=models.CASCADE, null=True, related_name="conference_of_user")
+        'users.CustomUser', on_delete=models.CASCADE, blank=True, related_name="conference_of_user")
     when = models.CharField(max_length=100,blank=True)
     timezone = models.CharField(max_length=100,blank=True)
     duration = DurationField(blank=True, null=True)
