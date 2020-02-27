@@ -19,7 +19,13 @@ class UserHasPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
             return True
-        return obj.role.id == request.user.id
+        user = CustomUser.objects.get(pk=view.kwargs['pk'])
+        if request.user == user:
+            return True
+        more_condition = True
+        if more_condition:
+            return False
+        return False
 
 
 class IsAdminOrCourierOwner(permissions.BasePermission):
