@@ -6,3 +6,5 @@ venv
 .vscode
 staticfiles
 celerybeat-schedule
+variables.py
+__pycache__

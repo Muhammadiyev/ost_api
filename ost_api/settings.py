@@ -1,8 +1,7 @@
 import os
+from variables import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, site_url
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -147,13 +146,13 @@ DJOSER = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_PORT = 2525
-EMAIL_HOST_USER = 'akbarshax23@mail.ru'
-EMAIL_HOST_PASSWORD = 'linban.ru'
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 EMAIL_USE_TLS = True
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-site_url = 'https:video.pager.uz/api/password_reset/confirm/'
+site_url = site_url
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
