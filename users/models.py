@@ -12,6 +12,13 @@ from company.models import Role, Department
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+
+def validate_image(fieldfile_obj):
+    filesize = fieldfile_obj.file.size
+    megabyte_limit = 2.0
+    if filesize > megabyte_limit*1024*1024:
+        raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -32,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=100)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/',validators=[validate_image],help_text='Maximum file size allowed is 2Mb', null=True, blank=True)
     created_at = models.DateTimeField(null=False, default=now)
     role = models.ForeignKey(
         Role, blank=True, null=True, related_name="user_of_role", on_delete=models.CASCADE)
