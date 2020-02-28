@@ -27,7 +27,7 @@ class UploadedFile(models.Model):
         preview = 'p'
         issue = 's'
     symbol = models.CharField(null=False, max_length=1)
-    file = models.FileField(upload_to=user_directory_path)
+    file = models.FileField(upload_to=user_directory_path, max_length=429916160)
     user = models.ForeignKey(User, models.CASCADE, null=False)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True)
     type = models.CharField(null=False, max_length=1)
