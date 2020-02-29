@@ -39,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=100)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
-    avatar = models.ImageField(upload_to='avatars/',validators=[validate_image],help_text='Maximum file size allowed is 2Mb', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_at = models.DateTimeField(null=False, default=now)
     role = models.ForeignKey(
         Role, blank=True, null=True, related_name="user_of_role", on_delete=models.CASCADE)
