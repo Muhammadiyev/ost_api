@@ -61,6 +61,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def users(self):
         return self.role_of_user
 
+    @property
+    def users(self):
+        return self.conference_of_users
+
     def get_short_name(self):
         return self.phone
 

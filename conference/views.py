@@ -14,6 +14,8 @@ from django.core.mail import EmailMessage, send_mail, EmailMultiAlternatives
 from rest_framework.views import APIView
 from django.conf import settings
 from otp.models import PhoneOTP
+from rest_framework import permissions, static, generics
+from permissions.permissions import UserHasPermission,IsAdminOrConferenceOwner
 import random
 from django.template.loader import render_to_string
 
@@ -70,6 +72,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         send_email(email)
         return response
 
+
 def send_otp(phone):
     if phone:
         key = random.randint(9999, 99999)
@@ -87,6 +90,14 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAdminOrConferenceOwner]
+
+        return [permission() for permission in permission_classes]
 
 class ConferenceUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

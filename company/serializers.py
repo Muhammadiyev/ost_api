@@ -31,7 +31,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ['id', 'department_name']
+        fields = ['id', 'department_name_uz','department_name_ru']
 
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
@@ -40,7 +40,7 @@ class DepartmentOfUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ['id', 'user_of_department',
-                  'parent', 'department_name', 'children']
+                  'parent', 'department_name_uz', 'department_name_ru','children']
 
 
 class RoleOfUserSerializer(serializers.ModelSerializer):
@@ -48,11 +48,11 @@ class RoleOfUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id', 'user_of_role', 'parent', 'name', 'children']
+        fields = ['id', 'user_of_role', 'parent', 'name_uz', 'name_ru', 'children']
 
 
 class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = ['id', 'name']
+        fields = ['id', 'name_uz', 'name_ru']

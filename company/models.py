@@ -18,14 +18,15 @@ class Company(models.Model):
         return self.user_of_company
 
 class Role(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name_uz = models.CharField(max_length=100, blank=True, null=True)
+    name_ru = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(_('active'), default=True)
     created_at = models.DateTimeField(null=False, default=now)
     parent = models.ForeignKey(
         'self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "%s" % self.name
+        return f"{self.name_uz} - {self.name_ru}"
 
     @property
     def users(self):
@@ -33,14 +34,15 @@ class Role(models.Model):
 
 
 class Department(models.Model):
-    department_name = models.CharField(max_length=100, blank=True, null=True)
+    department_name_uz = models.CharField(max_length=100, blank=True, null=True)
+    department_name_ru = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(_('active'), default=True)
     created_at = models.DateTimeField(null=False, default=now)
     parent = models.ForeignKey(
         'self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "%s" % self.department_name
+        return f"{self.department_name_uz} - {self.department_name_ru}"
 
     @property
     def users(self):

@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
 from users.models import CustomUser
+from conference.models import Conference
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -28,15 +29,21 @@ class UserHasPermission(permissions.BasePermission):
         return False
 
 
-class IsAdminOrCourierOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
+class IsAdminOrConferenceOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
         if request.user.is_staff:
             return True
-        parent = Parcel.objects.get(id=obj.id)
-        order = CustomUser.objects.get(parent=parent)
-        if request.user.user_type == 'COURIER':
-            if order.courier.id == request.user.id:
-                return True
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.user.is_staff:
+            return True
+        conference = Conference.objects.get(id=obj.id)
+        user = CustomUser.objects.filter(conference_of_users=conference)
+
+        if request.user in user:
+            return True
         return False
 
 
