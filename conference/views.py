@@ -114,3 +114,45 @@ class TypeConfViewSet(viewsets.ModelViewSet):
     queryset = TypeConf.objects.all()
     serializer_class = serializers.TypeConfSerializer
     authentication_classes = [authentication.TokenAuthentication, ]
+
+
+class ConferencePhoneViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConferenceSerializer
+    authentication_classes = [authentication.TokenAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['usersofroleofdepartments']
+
+    def post(self, request, *args, **kwargs):
+        phone = request.data.get('phone', False)
+        otp_sent = request.data.get('otp', False)
+        
+        if phone and otp_sent:
+            old = PhoneOTP.objects.filter(phone__iexact=phone)
+            if old.exists():
+                old = old.last()
+                otp = old.otp
+                if str(otp_sent) == str(otp):
+                    old.validated = True
+                    old.save()
+                    return Response({
+                        'status': True,
+                        'detail': 'OTP MATCHED.'
+                    })
+                else:
+                    return Response({
+                        'status': False,
+                        'detail': 'OTP INCOORECT'
+                    })
+            else:
+                return Response({
+                    'status': False,
+                    'detail': 'First proceed via sending otp request'
+                })
+        else:
+            return Response({
+                'status': False,
+                'detail': 'Please provide both phone and otp for validated'
+            })
