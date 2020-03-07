@@ -32,9 +32,9 @@ class AuthViewSet(viewsets.GenericViewSet):
 
     @action(methods=['POST', ], detail=False)
     def login(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = serializers.UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = get_and_authenticate_user(**serializer.validated_data)
+        user = serializer.validated_data['user']
         data = serializers.AuthUserSerializer(user).data
         return Response(data=data, status=status.HTTP_200_OK)
 

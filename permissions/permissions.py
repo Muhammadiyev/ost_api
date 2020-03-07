@@ -40,7 +40,7 @@ class IsAdminOrConferenceOwner(permissions.BasePermission):
         if request.user.is_staff:
             return True
         conference = Conference.objects.get(id=obj.id)
-        user = CustomUser.objects.filter(conference_of_user=conference)
+        user = CustomUser.objects.filter(conference_of_users=conference)
 
         if request.user in user:
             return True

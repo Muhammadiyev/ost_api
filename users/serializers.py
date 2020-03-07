@@ -1,6 +1,9 @@
+import re
+from rest_framework.exceptions import APIException
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model, password_validation, authenticate
 from rest_framework.authtoken.models import Token
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from django.contrib.auth.models import BaseUserManager
 from .models import CustomUser, CreateUserMany
 from company.models import Role
@@ -12,8 +15,16 @@ from djoser.conf import settings
 from company.models import Department
 from . import tokens
 from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUserSerializer, CompanySerializer
+import rest_auth.serializers
+from django.core.validators import validate_email
+from rest_framework_jwt.settings import api_settings
+from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 User = get_user_model()
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
+jwt_get_username_from_payload = api_settings.JWT_PAYLOAD_GET_USERNAME_HANDLER
 
 
 class RecursiveSerializer(serializers.Serializer):
@@ -37,23 +48,9 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['login', settings.LOGIN_FIELD, 'password', 'company',
+        fields = ['username', settings.LOGIN_FIELD, 'password', 'company',
                   'parent', 'phone', 'role', 'department', 'status', 'conference', 'auth_token']
         read_only_fields = ('id', 'is_active', 'is_staff')
-
-    def validate(self, attrs):
-        user = User(**attrs)
-        password = attrs.get("password")
-
-        try:
-            validate_password(password, user)
-        except django_exceptions.ValidationError as e:
-            serializer_error = serializers.as_serializer_error(e)
-            raise serializers.ValidationError(
-                {"password": serializer_error["non_field_errors"]}
-            )
-
-        return attrs
 
     def create(self, validated_data):
         try:
@@ -96,7 +93,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
+        fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active']
 
 
@@ -104,7 +101,7 @@ class UserRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'parent',
+        fields = ['id', 'username', 'email', 'parent',
                   'company', 'department', 'role']
 
 
@@ -128,14 +125,56 @@ class AuthUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name',
+        fields = ('id', 'username', 'email', 'first_name',
                   'last_name', 'is_active', 'is_staff', 'company', 'auth_token')
         read_only_fields = ('id', 'is_active', 'is_staff')
 
 
-class UserLoginSerializer(serializers.Serializer):
-    email = serializers.CharField(max_length=300, required=True)
-    password = serializers.CharField(required=True, write_only=True)
+def validateEmail(email):
+    if len(email) > 6:
+        if re.match('\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b', email) != None:
+            return 1
+    return 0
+
+
+class UserLoginSerializer(JSONWebTokenSerializer):
+    username_field = 'username_or_email'
+
+    def validate(self, attrs):
+
+        password = attrs.get("password")
+        user_obj = User.objects.filter(email=attrs.get("username_or_email")).first(
+        ) or User.objects.filter(username=attrs.get("username_or_email")).first()
+        if user_obj is not None:
+            credentials = {
+                'username': user_obj.username,
+                'password': password
+            }
+            if all(credentials.values()):
+                user = authenticate(**credentials)
+                if user:
+                    if not user.is_active:
+                        msg = _('User account is disabled.')
+                        raise serializers.ValidationError(msg)
+
+                    payload = jwt_payload_handler(user)
+
+                    return {
+                        'token': jwt_encode_handler(payload),
+                        'user': user
+                    }
+                else:
+                    msg = _('Unable to log in with provided credentials.')
+                    raise serializers.ValidationError(msg)
+
+            else:
+                msg = _('Must include "{username_field}" and "password".')
+                msg = msg.format(username_field=self.username_field)
+                raise serializers.ValidationError(msg)
+
+        else:
+            msg = _('Account with this email/username does not exists')
+            raise serializers.ValidationError(msg)
 
 
 class PasswordChangeSerializer(serializers.Serializer):
@@ -166,14 +205,16 @@ class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'department',
+        fields = ['id', 'username', 'email', 'department',
                   'parent', 'children', 'company']
+
 
 class UserOfConfSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email']
+        fields = ['id', 'username', 'email']
+
 
 class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
@@ -182,7 +223,7 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'department',
+        fields = ['id', 'username', 'email', 'department',
                   'parent', 'company', 'role',  'children']
 
 
@@ -193,7 +234,7 @@ class UserOfRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'email', 'role',
+        fields = ['id', 'username', 'email', 'role',
                   'parent', 'children', 'company', ]
 
 
@@ -217,45 +258,3 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'phone', 'first_login']
-
-
-class LoginSerializer(serializers.Serializer):
-    phone = serializers.CharField()
-    password = serializers.CharField(
-        style={'input_type': 'password'}, trim_whitespace=False)
-
-    def validate(self, data):
-        print(data)
-        phone = data.get("phone")
-        password = data.get("password")
-
-        if phone and password:
-            if User.objects.filter(phone=phone).exists():
-                print(phone, password)
-                user = authenticate(request=self.context.get(
-                    'request'), phone=phone, password=password)
-                print(user)
-            else:
-                msg = {
-                    'detail': 'Phone number not found',
-                    'status': False
-                }
-                raise serializers.ValidationError(msg)
-            if not user:
-                msg = {
-                    'detail': 'Phone number and password are not matching, Try again',
-                    'status': False,
-                }
-                raise serializers.ValidationError(msg, code='authorization')
-
-        else:
-            msg = {
-                'detail': 'Phone number and password not found in request',
-                'status': False
-            }
-            raise serializers.ValidationError(msg, code='authorization')
-
-        data['user'] = user
-        return data
-
-

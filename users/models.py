@@ -14,6 +14,7 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 
+
 def validate_image(fieldfile_obj):
     filesize = fieldfile_obj.file.size
     megabyte_limit = 2.0
@@ -22,7 +23,8 @@ def validate_image(fieldfile_obj):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    login = models.CharField(max_length=50, blank=True)
+    username = models.CharField(
+        'username', blank=True, max_length=50, unique=True)
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField('First Name', max_length=255, blank=True,
                                   null=False)
@@ -46,16 +48,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     department = models.ForeignKey(
         Department, blank=True, null=True, related_name="user_of_department", on_delete=models.CASCADE)
     parent = models.ForeignKey(
-        'self', blank=True, null=True,related_name='children', on_delete=models.CASCADE)
+        'self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
     status = models.BooleanField(_('status_user'), default=True)
     conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
         'company.Company', blank=True, null=True, related_name="user_of_company", on_delete=models.CASCADE)
-    
+
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    #REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
     @property
     def users(self):
