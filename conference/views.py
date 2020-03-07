@@ -88,16 +88,16 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['typeconf', 'user']
+    filter_fields = ['typeconf', 'usersofroleofdepartments']
 
-    # def get_permissions(self):
-    #     if self.action == 'list':
-    #         permission_classes = [IsAuthenticated]
-    #         permission_classes = [IsAdminUser]
-    #     else:
-    #         permission_classes = [IsAdminOrConferenceOwner]
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAdminOrConferenceOwner]
 
-    #     return [permission() for permission in permission_classes]
+        return [permission() for permission in permission_classes]
 
 class ConferenceUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

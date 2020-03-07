@@ -14,8 +14,8 @@ class EmailSerializer(serializers.Serializer):
 
 
 class PasswordTokenSerializer(serializers.Serializer):
-    password = serializers.CharField(label=_("Password"), style={
-                                     'input_type': 'password'})
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)                               
     token = serializers.CharField()
 
 
