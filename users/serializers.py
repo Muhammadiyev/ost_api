@@ -130,12 +130,6 @@ class AuthUserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'is_active', 'is_staff')
 
 
-def validateEmail(email):
-    if len(email) > 6:
-        if re.match('\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b', email) != None:
-            return 1
-    return 0
-
 
 class UserLoginSerializer(JSONWebTokenSerializer):
     username_field = 'username_or_email'
