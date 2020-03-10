@@ -174,7 +174,6 @@ class UserLoginSerializer(JSONWebTokenSerializer):
 class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
-    confirm_password = serializers.CharField(required=True)
 
     default_error_messages = {
         'invalid_password': 'Current password does not match'

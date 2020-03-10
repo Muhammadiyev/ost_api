@@ -43,8 +43,6 @@ class AuthViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         request.user.set_password(serializer.validated_data['new_password'])
-        request.user.set_password(
-            serializer.validated_data['confirm_password'])
         request.user.save()
         return Response(status=status.HTTP_200_OK)
 
