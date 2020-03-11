@@ -56,7 +56,7 @@ class RandomStringTokenGenerator(BaseTokenGenerator):
     Generates a random string with min and max length using os.urandom and binascii.hexlify
     """
 
-    def __init__(self, min_length=80, max_length=100, *args, **kwargs):
+    def __init__(self, min_length=10, max_length=50, *args, **kwargs):
         self.min_length = min_length
         self.max_length = max_length
 

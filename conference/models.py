@@ -4,7 +4,15 @@ from django.utils.translation import ugettext_lazy as _
 from users.models import CustomUser
 from django.db.models import DurationField
 import pytz
+import random
+import string
+from django_rest_passwordreset.tokens import get_token_generator
 
+TOKEN_GENERATOR_CLASS = get_token_generator()
+
+
+def generate_activation_code():
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for x in range(8))
 
 class TypeConf(models.Model):
     name = models.CharField(max_length=100, blank=True)
@@ -14,6 +22,12 @@ class TypeConf(models.Model):
 
 
 class Conference(models.Model):
+
+    @staticmethod
+    def generate_key():
+        """ generates a pseudo random code using os.urandom and binascii.hexlify """
+        return TOKEN_GENERATOR_CLASS.generate_token()
+
     theme = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(null=False, default=now)
@@ -31,10 +45,15 @@ class Conference(models.Model):
     status = models.BooleanField(_('public_conference'), default=True)
     usersofroleofdepartments = models.ManyToManyField(
         CustomUser, blank=True, related_name="conference_of_users")
+    room_name = models.CharField(max_length=1000000, blank=True)
 
     def __str__(self):
         return "%s" % self.theme
 
+    def save(self, *args, **kwargs):
+        if not self.room_name:
+            self.room_name = self.generate_key()
+        return super(Conference, self).save(*args, **kwargs)
 
 class ConferenceUser(models.Model):
     conference = models.ForeignKey(
