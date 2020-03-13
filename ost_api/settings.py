@@ -3,9 +3,9 @@ from variables import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, site_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'sd')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = ['*']
 
