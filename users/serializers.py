@@ -19,13 +19,22 @@ import rest_auth.serializers
 from django.core.validators import validate_email
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
+
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 jwt_get_username_from_payload = api_settings.JWT_PAYLOAD_GET_USERNAME_HANDLER
 
+
+def validate_image(value):
+    filesize= value.size
+    if filesize > 2097152:
+        raise ValidationError("The maximum file size that can be uploaded is 2MB")
+    else:
+        return value
 
 class RecursiveSerializer(serializers.Serializer):
     def to_representation(self, value):
@@ -90,6 +99,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     role = RoleOfUserSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
     company = CompanySerializer(read_only=True)
+    avatar = serializers.ImageField(validators=[validate_image])
 
     class Meta:
         model = User

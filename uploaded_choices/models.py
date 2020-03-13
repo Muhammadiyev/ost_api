@@ -15,14 +15,6 @@ User = get_user_model()
 from django.core.exceptions import ValidationError
 
 
-def validate_file_size(value):
-    filesize= value.size
-    
-    if filesize > 429916160:
-        raise ValidationError("The maximum file size that can be uploaded is 500MB")
-    else:
-        return value
-
 def user_directory_path(instance, name):
     return 'company_{0}/user_{1}/{2}'.format(instance.company.id, instance.user.id, name)
 
@@ -36,7 +28,7 @@ class UploadedFile(models.Model):
         preview = 'p'
         issue = 's'
     symbol = models.CharField(null=False, max_length=1)
-    file = models.FileField(upload_to=user_directory_path, validators=[validate_file_size])
+    file = models.FileField(upload_to=user_directory_path, blank=True)
     user = models.ForeignKey(User, models.CASCADE, null=False)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True)
     type = models.CharField(null=False, max_length=1)
