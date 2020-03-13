@@ -99,7 +99,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     role = RoleOfUserSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
     company = CompanySerializer(read_only=True)
-    avatar = serializers.ImageField(validators=[validate_image])
+    #avatar = serializers.ImageField(validators=[validate_image])
 
     class Meta:
         model = User
