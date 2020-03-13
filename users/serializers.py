@@ -130,7 +130,6 @@ class AuthUserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'is_active', 'is_staff')
 
 
-
 class UserLoginSerializer(JSONWebTokenSerializer):
     username_field = 'username_or_email'
 

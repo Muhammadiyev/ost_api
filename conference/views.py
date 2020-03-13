@@ -27,7 +27,7 @@ User = get_user_model()
 def send_email(email):
 
     context = {
-        'conference': Conference.objects.filter().order_by('-created_at').first()
+        'conference': Conference.objects.filter().last()
     }
     email_html_message = render_to_string('email/send_email.html', context)
     email_plaintext_message = render_to_string('email/send_email.txt', context)

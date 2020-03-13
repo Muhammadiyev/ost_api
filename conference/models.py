@@ -11,9 +11,6 @@ from django_rest_passwordreset.tokens import get_token_generator
 TOKEN_GENERATOR_CLASS = get_token_generator()
 
 
-def generate_activation_code():
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for x in range(8))
-
 class TypeConf(models.Model):
     name = models.CharField(max_length=100, blank=True)
 

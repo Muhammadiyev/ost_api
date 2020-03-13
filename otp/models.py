@@ -11,6 +11,10 @@ from company.models import Role, Department
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from django.conf import settings
+
+def otp_expiry_time():
+    return getattr(settings, 'DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME', 24)
 
 class PhoneOTP(AbstractBaseUser):
     phone_regex = RegexValidator(
@@ -20,6 +24,13 @@ class PhoneOTP(AbstractBaseUser):
     otp = models.CharField(max_length=9, blank=True, null=True)
     validated = models.BooleanField(
         default=False, help_text='If it is true, that means user have validate otp correctly in second API')
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        verbose_name=_("When was this token generated")
+    )
+    count = models.IntegerField(default=1, help_text='Number of Limit')
     
     def __str__(self):
         return str(self.phone) + 'is sent ' + str(self.otp)

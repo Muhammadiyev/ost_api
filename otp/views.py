@@ -5,7 +5,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .models import PhoneOTP
+from .models import PhoneOTP, otp_expiry_time
 from rest_framework import authentication
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -14,11 +14,12 @@ from django.http.response import HttpResponse
 from rest_framework import permissions, static, generics
 from django.shortcuts import get_object_or_404
 import random
+from datetime import timedelta
+from users.serializers import UserLoginSerializer
+from django.utils import timezone
+
 
 User = get_user_model()
-
-
-
 
 
 class ValidatePhoneSendOTP(APIView):
@@ -76,7 +77,9 @@ def send_otp(phone):
 
 
 class ValidateOTP(APIView):
-
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [authentication.TokenAuthentication, ]
+    
     def post(self, request, *args, **kwargs):
         phone = request.data.get('phone', False)
         otp_sent = request.data.get('otp', False)
@@ -84,14 +87,30 @@ class ValidateOTP(APIView):
         if phone and otp_sent:
             old = PhoneOTP.objects.filter(phone__iexact=phone)
             if old.exists():
-                old = old.first()
+                validation_time = otp_expiry_time()
+                old = old.last()
                 otp = old.otp
                 if str(otp_sent) == str(otp):
                     old.validated = True
+                    count = old.count
+                    if count > 3:
+                        return Response({
+                            'status': False,
+                            'detail': 'Sending otp error. Limit exceeded. Please contact customer support.'
+                        })
+
+                    old.count = count + 1
                     old.save()
+                    if old is None:
+                        return Response({'status': 'notfound'}, status=status.HTTP_404_NOT_FOUND)
+                    expiry_date = old.created_at + \
+                        timedelta(hours=validation_time)
+                    if timezone.now() > expiry_date:
+                        old.delete()
+                        return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
                     return Response({
                         'status': True,
-                        'detail': 'OTP MATCHED. Please proceed for registration'
+                        'detail': 'OTP MATCHED.'
                     })
                 else:
                     return Response({
