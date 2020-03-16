@@ -9,7 +9,7 @@ from .models import TypeConf, ConferenceUser, Conference
 from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework import authentication
+from rest_framework_simplejwt import authentication
 from django.core.mail import EmailMessage, send_mail, EmailMultiAlternatives
 from rest_framework.views import APIView
 from django.conf import settings
@@ -46,7 +46,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
@@ -85,7 +85,7 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceGetSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
@@ -103,7 +103,7 @@ class ConferenceUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = ConferenceUser.objects.all()
     serializer_class = serializers.ConferenceUserSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['see_user', 'conference']
@@ -113,14 +113,14 @@ class TypeConfViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = TypeConf.objects.all()
     serializer_class = serializers.TypeConfSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
 
 
 class ConferencePhoneViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['usersofroleofdepartments']

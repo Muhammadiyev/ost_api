@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from .models import PhoneOTP, otp_expiry_time
-from rest_framework import authentication
+from rest_framework_simplejwt import authentication
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
@@ -78,7 +78,7 @@ def send_otp(phone):
 
 class ValidateOTP(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     
     def post(self, request, *args, **kwargs):
         phone = request.data.get('phone', False)

@@ -3,6 +3,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
+from rest_framework_simplejwt import views as jwt_views
+from users.views import TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,6 +21,7 @@ urlpatterns = [
 
     url(r'^api/password_reset/',
         include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

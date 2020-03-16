@@ -9,37 +9,37 @@ from .models import GroupUser, GroupChat, Group, Message
 from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework import authentication
+from rest_framework_simplejwt import authentication
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse, HttpResponse
 User = get_user_model()
 
 
 class GroupChatViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = GroupChat.objects.all()
     serializer_class = serializers.GroupChatSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['user', 'group']
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['user']
 
 
 class GroupUserViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = GroupUser.objects.all()
     serializer_class = serializers.GroupUserSerializer
-    authentication_classes = [authentication.TokenAuthentication, ]
+    authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['user', 'group']

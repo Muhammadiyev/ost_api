@@ -1,13 +1,17 @@
+from datetime import timedelta
 import os
+
 from variables import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, site_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = ['*']
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,7 +86,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        # "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
@@ -101,10 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
-}
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -150,13 +150,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 site_url = site_url
 
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
-}
-
-
 CORS_ORIGIN_ALLOW_ALL = True
-
 
 CORS_ALLOW_METHODS = [
     'DELETE',

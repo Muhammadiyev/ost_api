@@ -20,6 +20,9 @@ from django.core.validators import validate_email
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 from django.core.exceptions import ValidationError
+from .tokens import RefreshToken
+from users.settings import api_settings as BLACKLIST_AFTER_ROTATION
+from users.settings import api_settings as ROTATE_REFRESH_TOKENS
 
 User = get_user_model()
 
@@ -130,8 +133,12 @@ class AuthUserSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
 
     def get_auth_token(self, obj):
-        token, created = Token.objects.get_or_create(user=obj)
-        return token.key
+        refresh = RefreshToken.for_user(user=obj)
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
 
     class Meta:
         model = User
@@ -259,3 +266,28 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'phone', 'first_login']
+
+
+class TokenRefreshSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        refresh = RefreshToken(attrs['refresh'])
+
+        data = {'access': str(refresh.access_token)}
+
+        if ROTATE_REFRESH_TOKENS:
+            if BLACKLIST_AFTER_ROTATION:
+                try:
+                    # Attempt to blacklist the given refresh token
+                    refresh.blacklist()
+                except AttributeError:
+                    # If blacklist app not installed, `blacklist` method will
+                    # not be present
+                    pass
+
+            refresh.set_jti()
+            refresh.set_exp()
+
+
+        return data
