@@ -165,3 +165,12 @@ class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
             permission_classes = [UserHasPermission]
 
         return [permission() for permission in permission_classes]
+
+class UsersViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = serializers.UsersAllSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['parent', 'company']

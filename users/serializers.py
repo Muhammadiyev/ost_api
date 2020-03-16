@@ -238,6 +238,14 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'department',
                   'parent', 'company', 'role',  'children']
 
+class UsersAllSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer(read_only=True)
+    role = RoleSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'department',
+                  'parent', 'company', 'role']
 
 class UserOfRoleSerializer(serializers.ModelSerializer):
 

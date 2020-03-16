@@ -7,6 +7,7 @@ from .views import (
     UserOfRoleOfDepartmentViewSet,
     UserOfDepartmentViewSet,
     UserOfRoleOfViewSet,
+    UsersViewSet,
 )
 
 
@@ -17,5 +18,6 @@ router.register('userofroleofdepartment',
                 UserOfRoleOfDepartmentViewSet, basename='auth')
 router.register('userofrole', UserOfRoleOfViewSet, basename='auth')
 router.register('users', UserAllViewSet)
+router.register('usersconf', UsersViewSet)
 
 urlpatterns = router.urls
