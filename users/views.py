@@ -17,7 +17,9 @@ from django.http.response import HttpResponse
 from rest_framework import permissions, static, generics
 from django.shortcuts import get_object_or_404
 from permissions.permissions import UserHasPermission
+from rest_framework_simplejwt.exceptions import TokenBackendError, TokenError, InvalidToken
 import random
+from .authentication import AUTH_HEADER_TYPES
 User = get_user_model()
 
 
