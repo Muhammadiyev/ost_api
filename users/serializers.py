@@ -55,8 +55,12 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
 
     def get_auth_token(self, obj):
-        token, created = Token.objects.get_or_create(user=obj)
-        return token.key
+        refresh = RefreshToken.for_user(user=obj)
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
 
     class Meta:
         model = User
