@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 from django.conf import settings
 from otp.models import PhoneOTP
 from rest_framework import permissions, static, generics
-from permissions.permissions import UserHasPermission,IsAdminOrConferenceOwner
+from permissions.permissions import UserHasPermission, IsAdminOrConferenceOwner
 import random
 from django.template.loader import render_to_string
 
@@ -90,14 +90,25 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
 
-    # def get_permissions(self):
-    #     if self.action == 'list':
-    #         permission_classes = [IsAuthenticated]
-    #         permission_classes = [IsAdminUser]
-    #     else:
-    #         permission_classes = [IsAdminOrConferenceOwner]
 
-    #     return [permission() for permission in permission_classes]
+class ConfUserIDViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConferenceGetSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['typeconf', 'user']
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAdminOrConferenceOwner]
+
+        return [permission() for permission in permission_classes]
+
 
 class ConferenceUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -128,7 +139,7 @@ class ConferencePhoneViewSet(viewsets.ModelViewSet):
     def post(self, request, *args, **kwargs):
         phone = request.data.get('phone', False)
         otp_sent = request.data.get('otp', False)
-        
+
         if phone and otp_sent:
             old = PhoneOTP.objects.filter(phone__iexact=phone)
             if old.exists():

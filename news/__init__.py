@@ -1,1 +1,1 @@
-default_app_config = 'news.apps.News_Site'
+default_app_config = 'news.apps.ost_api'

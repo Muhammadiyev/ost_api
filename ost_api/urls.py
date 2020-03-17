@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('users.urls')),
     path('api/', include('otp.urls')),
     path('api/v1/', include('company.urls')),
+    path('api/v1/', include('news.urls')),
     path('api/v1/', include('conference.urls', namespace='conference')),
     path('api/v1/', include('groups.urls')),
     path('api/v1/', include('uploaded_choices.urls')),

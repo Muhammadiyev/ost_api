@@ -22,52 +22,6 @@ from django.utils import timezone
 User = get_user_model()
 
 
-class ValidatePhoneSendOTP(APIView):
-
-    def post(self, request, *args, **kwargs):
-        phone_number = request.data.get('phone')
-        print(phone_number)
-        if phone_number:
-            phone = str(phone_number)
-            user = User.objects.filter(phone__iexact=phone)
-            if user.exists():
-                return Response({'status': False, 'detail': 'phone number already exist'})
-            else:
-                key = send_otp(phone)
-                if key:
-                    old = PhoneOTP.objects.filter(phone__iexact=phone)
-                    if old.exists():
-                        old = old.first()
-                        count = old.count
-                        if count > 10:
-                            return Response({
-                                'status': False,
-                                'detail': 'Sending otp error. Limit exceeded. Please contact customer support.'
-                            })
-
-                        old.count = count + 1
-                        old.save()
-                        print('count increase', count)
-                        return Response({
-                            'status': True,
-                            'detail': 'OTP sent successfully'
-                        })
-                    else:
-
-                        PhoneOTP.objects.create(
-                            phone=phone,
-                            otp=key
-                        )
-                        return Response({
-                            'status': True,
-                            'detail': 'OTP sent successfully'
-                        })
-                else:
-                    return Response({'status': False, 'detail': 'Sending otp error'})
-        else:
-            return Response({'status': False, 'detail': 'Phone number is not given in post request'})
-
-
 def send_otp(phone):
     if phone:
         key = random.randint(9999, 99999)
@@ -79,7 +33,7 @@ def send_otp(phone):
 class ValidateOTP(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [authentication.JWTAuthentication, ]
-    
+
     def post(self, request, *args, **kwargs):
         phone = request.data.get('phone', False)
         otp_sent = request.data.get('otp', False)

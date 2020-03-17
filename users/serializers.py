@@ -33,11 +33,13 @@ jwt_get_username_from_payload = api_settings.JWT_PAYLOAD_GET_USERNAME_HANDLER
 
 
 def validate_image(value):
-    filesize= value.size
+    filesize = value.size
     if filesize > 2097152:
-        raise ValidationError("The maximum file size that can be uploaded is 2MB")
+        raise ValidationError(
+            "The maximum file size that can be uploaded is 2MB")
     else:
         return value
+
 
 class RecursiveSerializer(serializers.Serializer):
     def to_representation(self, value):
@@ -238,6 +240,7 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'department',
                   'parent', 'company', 'role',  'children']
 
+
 class UsersAllSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     role = RoleSerializer(read_only=True)
@@ -246,7 +249,8 @@ class UsersAllSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active']
-    
+
+
 class UserOfRoleSerializer(serializers.ModelSerializer):
 
     role = RoleSerializer(read_only=True)
@@ -300,6 +304,5 @@ class TokenRefreshSerializer(serializers.Serializer):
 
             refresh.set_jti()
             refresh.set_exp()
-
 
         return data

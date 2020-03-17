@@ -166,6 +166,7 @@ class UserOfRoleOfDepartmentViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
+
 class UsersViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
