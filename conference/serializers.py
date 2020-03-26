@@ -31,13 +31,43 @@ class ConferenceGetSerializer(serializers.ModelSerializer):
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
                   'save_conf', 'start_time', 'protected', 'status', 'user','usersofroleofdepartments','created_at']
 
-class ConfUserIDSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'order',
+            'email',
+            'username'
+        ]
+
+
+class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
     user = UserOfConfSerializer(read_only=True)
-    
+    usersofroleofdepartments = UserSerializer(many=True)
+    id = serializers.IntegerField()
+
     class Meta:
         model = Conference
-        fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
+        fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration',
                   'save_conf', 'start_time', 'protected', 'status', 'user','usersofroleofdepartments','created_at','room_name']
+
+    def update(self, instance, validated_data):
+        all_users_data = validated_data.pop('usersofroleofdepartments')
+        for usersofroleofdepartments in all_users_data:
+            if 'id' in usersofroleofdepartments:
+                parcel_id = usersofroleofdepartments.pop('id')
+                User.objects.update_or_create(id=parcel_id, defaults=usersofroleofdepartments)
+            else:
+                user_id = validated_data['id']
+                usersofroleofdepartments = User.objects.create(user_id=user_id,**usersofroleofdepartments)
+                instance.usersofroleofdepartments.add(usersofroleofdepartments)
+   
+        return super(ConfUserIDSerializer, self).update(instance, validated_data)
+
 
 class ConferenceUserSerializer(serializers.ModelSerializer):
     conference = ConferenceSerializer()

@@ -7,6 +7,7 @@ import pytz
 import random
 import string
 from django_rest_passwordreset.tokens import get_token_generator
+from users.fields import OrderField
 
 TOKEN_GENERATOR_CLASS = get_token_generator()
 
@@ -27,7 +28,7 @@ class Conference(models.Model):
 
     theme = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
-    created_at = models.DateTimeField(null=False, default=now)
+    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
     user = models.ForeignKey(
         'users.CustomUser', on_delete=models.CASCADE, blank=True, related_name="conference_of_user")
     when = models.CharField(max_length=100, blank=True)

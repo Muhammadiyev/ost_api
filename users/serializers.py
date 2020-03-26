@@ -247,7 +247,7 @@ class UsersAllSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
+        fields = ['id','order', 'username', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active']
 
 

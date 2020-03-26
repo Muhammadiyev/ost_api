@@ -18,6 +18,7 @@ from django.db.models.manager import EmptyManager
 from django.utils.functional import cached_property
 from rest_framework_simplejwt.compat import CallableFalse, CallableTrue
 from .settings import api_settings
+from users.fields import OrderField
 
 def validate_image(fieldfile_obj):
     filesize = fieldfile_obj.file.size
@@ -46,7 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    created_at = models.DateTimeField(null=False, default=now)
+    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
     role = models.ForeignKey(
         Role, blank=True, null=True, related_name="user_of_role", on_delete=models.CASCADE)
     department = models.ForeignKey(
@@ -57,6 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
         'company.Company', blank=True, null=True, related_name="user_of_company", on_delete=models.CASCADE)
+    order = OrderField(blank=True)
 
     objects = UserManager()
 
