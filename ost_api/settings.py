@@ -1,7 +1,14 @@
 from datetime import timedelta
 import os
 
-from variables import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, site_url
+from variables import (
+    EMAIL_HOST_PASSWORD, 
+    EMAIL_HOST_USER, 
+    site_url, 
+    SMS_LOGIN,
+    SMS_PASSWORD,
+    SMS_URL
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -149,6 +156,9 @@ SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 site_url = site_url
+SMS_LOGIN = SMS_LOGIN
+SMS_PASSWORD = SMS_PASSWORD
+SMS_URL = SMS_URL
 
 CORS_ORIGIN_ALLOW_ALL = True
 
