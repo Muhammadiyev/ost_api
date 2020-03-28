@@ -43,7 +43,7 @@ def send_email(email):
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
@@ -66,8 +66,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                 key = send_otp(phone)
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
-                    print(phone)
-                    print(key)
+                
                     payload = {'msisdn': phone, 'text': key, 'id': 0,'login' : "orientsoft", 'password': 'Or!enT$ofT', 'ref-id': 0,'version':1.0}
                     r = requests.get('http://91.204.239.42:8081/re-smsbroker', params=payload)
                     

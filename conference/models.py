@@ -40,7 +40,8 @@ class Conference(models.Model):
     save_conf = models.BooleanField(_('save_conference'), default=False)
     start_time = models.CharField(max_length=100, blank=True)
     protected = models.BooleanField(_('protected_conference'), default=True)
-    status = models.BooleanField(_('public_conference'), default=True)
+    status = models.BooleanField(_('status'), default=True)
+    start_status = models.BooleanField(_('start_status'), default=True)
     usersofroleofdepartments = models.ManyToManyField(
         CustomUser, blank=True, related_name="conference_of_users")
     room_name = models.CharField(max_length=1000000, blank=True)

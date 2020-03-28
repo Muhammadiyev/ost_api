@@ -21,7 +21,7 @@ class ConferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
-                  'save_conf', 'start_time', 'protected', 'status', 'user','usersofroleofdepartments','created_at','room_name']
+                  'save_conf', 'start_time', 'protected', 'status','start_status', 'user','usersofroleofdepartments','created_at','room_name']
 
 class ConferenceGetSerializer(serializers.ModelSerializer):
     user = UserOfConfSerializer(read_only=True)
@@ -29,7 +29,7 @@ class ConferenceGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
-                  'save_conf', 'start_time', 'protected', 'status', 'user','usersofroleofdepartments','created_at']
+                  'save_conf', 'start_time', 'protected', 'status','start_status', 'user','usersofroleofdepartments','created_at']
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -53,7 +53,7 @@ class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration',
-                  'save_conf', 'start_time', 'protected', 'status', 'user','usersofroleofdepartments','created_at','room_name']
+                  'save_conf', 'start_time', 'protected', 'status','start_status','user','usersofroleofdepartments','created_at','room_name']
 
     def update(self, instance, validated_data):
         all_users_data = validated_data.pop('usersofroleofdepartments')
