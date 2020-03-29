@@ -66,8 +66,9 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                 key = send_otp(phone)
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
-                    payload = {'msisdn': phone, 'text': key, 'id': 0,'login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
-                    r = requests.get(settings.SMS_URL, params=payload)
+                    r = requests.get('http://91.204.239.42/stop_all?action=delete&msisdn=phone')
+                    payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get('http://91.204.239.42:8081/re-smsbroker', params=payload)
                     
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
