@@ -66,8 +66,8 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                 key = send_otp(phone)
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
-                    payload = {'msisdn': phone, 'text':'OST company, your code is ' +  key, 'id': 0,'login' : 'orientsoft', 'password': 'Or!enT$ofT', 'ref-id': 0,'version':1.0}
-                    r = requests.get('http://91.204.239.42:8081/re-smsbroker', params=payload)
+                    payload = {'msisdn': phone, 'text': key, 'id': 0,'login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get(settings.SMS_URL, params=payload)
                     
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
