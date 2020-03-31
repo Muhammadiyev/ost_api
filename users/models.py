@@ -58,7 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     conference = models.BooleanField(_('conference_user'), default=True)
     company = models.ForeignKey(
         'company.Company', blank=True, null=True, related_name="user_of_company", on_delete=models.CASCADE)
-    order = OrderField(blank=True)
+    order = models.IntegerField(default=1,blank=True)
 
     objects = UserManager()
 

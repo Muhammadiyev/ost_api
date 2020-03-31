@@ -69,7 +69,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
                     payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
-                    r = requests.get('http://91.204.239.42:8081/re-smsbroker', params=payload)
+                    r = requests.get(settings.SMS_URL, params=payload)
                     
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
@@ -94,6 +94,16 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
     filter_fields = ['typeconf', 'user']
 
 
+class ConfUsersIDViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConfUserIDSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['usersofroleofdepartments', 'typeconf','user']
+
+
 class ConfUserIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
@@ -101,7 +111,7 @@ class ConfUserIDViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['typeconf', 'user']
+    filter_fields = ['usersofroleofdepartments', 'typeconf','user']
 
     def get_permissions(self):
         if self.action == 'list':

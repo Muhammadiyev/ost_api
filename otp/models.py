@@ -16,7 +16,7 @@ from django.conf import settings
 def otp_expiry_time():
     return getattr(settings, 'DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME', 24)
 
-class PhoneOTP(AbstractBaseUser):
+class PhoneOTP(models.Model):
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,14}$', message="Phone number   must be entered in the format: '+999999999'. Up to 14 digits allowed.")
     phone = models.CharField(

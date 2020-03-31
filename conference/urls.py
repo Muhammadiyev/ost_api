@@ -7,7 +7,8 @@ from .views import (
     ConferenceUserViewSet, 
     ConferenceGetViewSet,
     ConferencePhoneViewSet,
-    ConfUserIDViewSet
+    ConfUserIDViewSet,
+    ConfUsersIDViewSet
 )
 
 app_name = 'conference'
@@ -20,6 +21,7 @@ router.register('conference', ConferenceGetViewSet)
 router.register('conferenceuser', ConferenceUserViewSet)
 router.register('phone', ConferencePhoneViewSet)
 router.register('confuserid', ConfUserIDViewSet)
+router.register('confusersid', ConfUsersIDViewSet)
 
 
 urlpatterns = router.urls

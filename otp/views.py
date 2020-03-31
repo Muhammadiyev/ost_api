@@ -47,7 +47,7 @@ class ValidateOTP(APIView):
                 if str(otp_sent) == str(otp):
                     old.validated = True
                     count = old.count
-                    if count > 3:
+                    if count > 5:
                         return Response({
                             'status': False,
                             'detail': 'Sending otp error. Limit exceeded. Please contact customer support.'
