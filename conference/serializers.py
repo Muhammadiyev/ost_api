@@ -3,8 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
 from .models import TypeConf, Conference, ConferenceUser
-from users.serializers import UserOfConfSerializer
-from users.serializers import UserOfConferenceSerializer, CustomUserCreateSerializer
+from users.serializers import UserOfConferenceSerializer, CustomUserCreateSerializer, UserOfConfSerializer, UsersAllSerializer
 
 User = get_user_model()
 
@@ -47,7 +46,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
     user = UserOfConfSerializer(read_only=True)
-    usersofroleofdepartments = UserSerializer(many=True)
+    usersofroleofdepartments = UsersAllSerializer(many=True)
     id = serializers.IntegerField()
 
     class Meta:

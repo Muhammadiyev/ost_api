@@ -227,7 +227,7 @@ class UserOfConfSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'order']
+        fields = ['id', 'username', 'email', 'order','online_user']
 
 
 class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
@@ -247,7 +247,7 @@ class UsersAllSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','order', 'username', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
+        fields = ['id','order', 'username', 'email', 'parent', 'company', 'department', 'role','online_user', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active']
 
 
