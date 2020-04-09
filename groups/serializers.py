@@ -33,11 +33,7 @@ class GroupUserSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = serializers.SlugRelatedField(
-        many=False, slug_field='email', queryset=CustomUser.objects.all())
-    receiver = serializers.SlugRelatedField(
-        many=False, slug_field='email', queryset=CustomUser.objects.all())
-
+ 
     class Meta:
         model = Message
-        fields = ['id','sender', 'receiver', 'message', 'timestamp','is_read']
+        fields = ['id','sender', 'receiver', 'message', 'timestamp','file','is_read']

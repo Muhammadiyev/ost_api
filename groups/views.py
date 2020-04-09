@@ -46,8 +46,13 @@ class GroupUserViewSet(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
+    permission_classes = [IsAuthenticated]
+    queryset = Message.objects.all().order_by('-id')
     serializer_class = serializers.MessageSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['sender', 'receiver']
 
 
 @csrf_exempt

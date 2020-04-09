@@ -43,12 +43,13 @@ class GroupUser(models.Model):
 
 class Message(models.Model):
     sender = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='sender')
+        CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='receiver')
+        CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='receiver')
     message = models.CharField(max_length=1200)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    file = models.FileField(upload_to='chat', blank=True)
 
     def __str__(self):
         return self.message

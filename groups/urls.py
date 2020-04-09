@@ -9,15 +9,11 @@ from .views import (
     GroupViewSet
 )
 
-router = routers.DefaultRouter()
 
-router.register('messages', MessageViewSet)
+router = routers.DefaultRouter(trailing_slash=False)
+router.register('chat', MessageViewSet)
 router.register('groupchat', GroupChatViewSet)
 router.register('groupuser', GroupUserViewSet)
 router.register('group', GroupViewSet)
 
-
-urlpatterns = [
-    path('messageapi/', message_list),
-    path('', include(router.urls)),
-]
+urlpatterns = router.urls

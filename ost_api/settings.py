@@ -95,6 +95,11 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
+    'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
+    'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
+    # 'DEFAULT_PAGINATION_CLASS':
+    #     'rest_framework_json_api.pagination.PageNumberPagination',
+    #'PAGE_SIZE': 20,
 }
 
 DURATIONFIELD_ALLOW_MONTHS = True
