@@ -5,13 +5,16 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .models import GroupUser, GroupChat, Group, Message
+from .models import GroupUser, GroupChat, Group, Message, Room
 from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework_simplejwt import authentication
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse, HttpResponse
+from rest_framework.views import APIView
+from django.db.models import Q
+
 User = get_user_model()
 
 
@@ -47,33 +50,38 @@ class GroupUserViewSet(viewsets.ModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Message.objects.all().order_by('-id')
+    queryset = Message.objects.all()
     serializer_class = serializers.MessageSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['sender', 'receiver']
+    filter_fields = ['room','conference']
 
 
-@csrf_exempt
-def message_list(request, sender=None, receiver=None):
-    """
-    List all required messages, or create a new message.
-    """
-    if request.method == 'GET':
-        messages = Message.objects.filter(
-            sender_id=sender, receiver_id=receiver, is_read=False)
-        serializer = serializers.MessageSerializer(
-            messages, many=True, context={'request': request})
-        for message in messages:
-            message.is_read = True
-            message.save()
-        return JsonResponse(serializer.data, safe=False)
+class MessageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Message.objects.all()
+    serializer_class = serializers.MessagePostSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['room','conference']
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = serializers.MessageSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+
+class Rooms(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Room.objects.all()
+    serializer_class = serializers.RoomSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['conference','invited']
+
+class RoomsGetViews(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Room.objects.all()
+    serializer_class = serializers.RoomGetSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['conference','invited']

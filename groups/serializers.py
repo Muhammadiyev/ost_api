@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, password_validation
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
-from .models import Group, GroupChat, GroupUser, Message
+from .models import Group, GroupChat, GroupUser, Message, Room
 from users.models import CustomUser
 from users.serializers import UserOfRoleSerializer
 
@@ -32,8 +32,41 @@ class GroupUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'groug', 'created_at']
 
 
+class UserSerializer(serializers.ModelSerializer):
+    """Сериализация пользователя"""
+    class Meta:
+        model = User
+        fields = ("id", "username")
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    """Сериализация комнат чата"""
+
+    class Meta:
+        model = Room
+        fields = ("id", "creator", "invited",'conference', "timestamp",'status')
+
+class RoomGetSerializer(serializers.ModelSerializer):
+    """Сериализация комнат чата"""
+    creator = UserSerializer()
+    invited = UserSerializer()
+
+    class Meta:
+        model = Room
+        fields = ("id", "creator", "invited",'conference', "timestamp",'status')
+
 class MessageSerializer(serializers.ModelSerializer):
+    """Сериализация чата"""
+    sender = UserSerializer()
+    receiver = UserSerializer()
+
+    class Meta:
+        model = Message
+        fields = ('id', "sender",'receiver', "message", "timestamp",'status','conference')
+
+
+class MessagePostSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = Message
-        fields = ['id','sender', 'receiver', 'message', 'timestamp','file','is_read']
+        fields = ['id','room', 'sender','receiver', 'message', 'timestamp','file','is_read','conference','status']

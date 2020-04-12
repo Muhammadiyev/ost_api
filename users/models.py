@@ -41,9 +41,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         regex=r'^\+?1?\d{9,14}$', message="Phone number   must be entered in the format: '+999999999'. Up to 14 digits allowed.")
     phone = models.CharField(
         validators=[phone_regex], max_length=17, blank=True, unique=True)
-    last_seen = models.DateTimeField(null=False, default=now)
+    last_seen = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
-    city = models.CharField(max_length=100)
+    city = models.CharField(max_length=100,blank=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
