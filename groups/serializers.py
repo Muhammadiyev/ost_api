@@ -26,7 +26,6 @@ class GroupChatSerializer(serializers.ModelSerializer):
 class GroupUserSerializer(serializers.ModelSerializer):
 
     #company = CompanySerializer(read_only=True)
-
     class Meta:
         model = GroupUser
         fields = ['id', 'user', 'groug', 'created_at']
@@ -44,7 +43,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "creator", "invited",'conference', "timestamp",'status')
+        fields = ("id",'room_name', "creator", "invited",'conference', "timestamp",'status')
 
 class RoomGetSerializer(serializers.ModelSerializer):
     """Сериализация комнат чата"""
@@ -53,7 +52,7 @@ class RoomGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "creator", "invited",'conference', "timestamp",'status')
+        fields = ("id",'room_name', "creator", "invited",'conference', "timestamp",'status')
 
 class MessageSerializer(serializers.ModelSerializer):
     """Сериализация чата"""

@@ -45,6 +45,7 @@ class GroupUser(models.Model):
 
 class Room(models.Model):
     """Модель комнаты чата"""
+    room_name = models.CharField(max_length=100,blank=True)
     creator = models.ForeignKey(User, verbose_name="Создатель", on_delete=models.CASCADE)
     invited = models.ForeignKey(User, verbose_name="Участник", on_delete=models.CASCADE, related_name="invited_user")
     timestamp = models.DateTimeField("Дата создания", auto_now_add=True)
