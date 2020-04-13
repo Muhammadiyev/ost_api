@@ -59,7 +59,7 @@ class Room(models.Model):
 
 
 class Message(models.Model):
-    room = models.ForeignKey(Room,blank=True, verbose_name="Комната чата", on_delete=models.CASCADE)
+    room = models.ForeignKey(Room,blank=True,null=True,  verbose_name="Комната чата", on_delete=models.CASCADE)
     sender = models.ForeignKey(
         CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(

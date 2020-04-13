@@ -244,7 +244,8 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
 class UsersAllSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     role = RoleSerializer(read_only=True)
-
+    id = serializers.IntegerField()
+    
     class Meta:
         model = User
         fields = ['id','order', 'username', 'email', 'parent', 'company', 'department', 'role','online_user', 'status', 'conference', 'first_name', 'last_name', 'midname',
