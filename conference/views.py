@@ -97,7 +97,7 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
 class ConfUsersIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
-    serializer_class = serializers.ConfUserIDSerializer
+    serializer_class = serializers.ConfUsersIDSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)

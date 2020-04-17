@@ -44,6 +44,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+class ConfUsersIDSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Conference
+        fields = ['id', 'theme', 'when', 'user','usersofroleofdepartments']
+
+
 class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
     user = UserOfConfSerializer(read_only=True)
     usersofroleofdepartments = UsersAllSerializer(many=True)

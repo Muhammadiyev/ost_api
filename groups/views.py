@@ -65,7 +65,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['room','conference']
+    filter_fields = ['room', 'conference']
 
 
 class Rooms(viewsets.ModelViewSet):
@@ -75,7 +75,7 @@ class Rooms(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['conference','invited']
+    filter_fields = ['conference', 'invited', 'creator']
 
 class RoomsGetViews(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -84,4 +84,4 @@ class RoomsGetViews(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['conference','invited']
+    filter_fields = ['conference', 'invited', 'creator']
