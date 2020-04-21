@@ -1,71 +1,38 @@
-from django.contrib.auth import get_user_model, password_validation
-from rest_framework.authtoken.models import Token
 from rest_framework import serializers
-from django.contrib.auth.models import BaseUserManager
-from .models import Group, GroupChat, GroupUser, Message, Room
-from users.models import CustomUser
-from users.serializers import UserOfRoleSerializer
-
-User = get_user_model()
+from .models import Chat, Contact
+from .consumers import get_user_contact
 
 
-class GroupSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Group
-        fields = ('id', 'name', 'user', 'status')
+class ContactSerializer(serializers.StringRelatedField):
+    def to_internal_value(self, value):
+        return value
 
 
-class GroupChatSerializer(serializers.ModelSerializer):
+class ChatSerializer(serializers.ModelSerializer):
+    participants = ContactSerializer(many=True)
 
     class Meta:
-        model = GroupChat
-        fields = ['id', 'user', 'group', 'message', 'status', 'created_at']
+        model = Chat
+        fields = ('id', 'messages', 'participants')
+        read_only = ('id')
+
+    def create(self, validated_data):
+        print(validated_data)
+        participants = validated_data.pop('participants')
+        chat = Chat()
+        chat.save()
+        for username in participants:
+            contact = get_user_contact(username)
+            chat.participants.add(contact)
+        chat.save()
+        return chat
 
 
-class GroupUserSerializer(serializers.ModelSerializer):
+# do in python shell to see how to serialize data
 
-    #company = CompanySerializer(read_only=True)
-    class Meta:
-        model = GroupUser
-        fields = ['id', 'user', 'groug', 'created_at']
-
-
-class UserSerializer(serializers.ModelSerializer):
-    """Сериализация пользователя"""
-    class Meta:
-        model = User
-        fields = ("id", "username")
-
-
-class RoomSerializer(serializers.ModelSerializer):
-    """Сериализация комнат чата"""
-
-    class Meta:
-        model = Room
-        fields = ("id",'room_name', "creator", "invited",'conference', "timestamp",'status')
-
-class RoomGetSerializer(serializers.ModelSerializer):
-    """Сериализация комнат чата"""
-    creator = UserSerializer()
-    invited = UserSerializer()
-
-    class Meta:
-        model = Room
-        fields = ("id",'room_name', "creator", "invited",'conference', "timestamp",'status')
-
-class MessageSerializer(serializers.ModelSerializer):
-    """Сериализация чата"""
-    sender = UserSerializer()
-    receiver = UserSerializer()
-
-    class Meta:
-        model = Message
-        fields = ('id', "sender",'receiver', "message", "timestamp",'status','conference')
-
-
-class MessagePostSerializer(serializers.ModelSerializer):
- 
-    class Meta:
-        model = Message
-        fields = ['id','room', 'sender','receiver', 'message', 'timestamp','file','is_read','conference','status']
+# from chat.models import Chat
+# from chat.api.serializers import ChatSerializer
+# chat = Chat.objects.get(id=1)
+# s = ChatSerializer(instance=chat)
+# s
+# s.data

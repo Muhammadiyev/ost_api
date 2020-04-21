@@ -9,62 +9,34 @@ from django.contrib.auth import get_user_model, password_validation
 
 User = get_user_model()
 
-class Group(models.Model):
-    name = models.CharField(max_length=100, blank=True)
+
+class Contact(models.Model):
     user = models.ForeignKey(
-        'users.CustomUser', on_delete=models.CASCADE, related_name="group_of_user")
+        User, related_name='friends', on_delete=models.CASCADE)
+    friends = models.ManyToManyField('self', blank=True)
+    created_at = models.DateTimeField(null=False, default=now)
     status = models.BooleanField(_('public_conference'), default=True)
 
     def __str__(self):
-        return "%s" % self.name
-
-
-class GroupChat(models.Model):
-    created_at = models.DateTimeField(null=False, default=now)
-    user = models.ForeignKey(
-        'users.CustomUser', on_delete=models.CASCADE, related_name="groupchat_of_user")
-    group = models.ForeignKey(
-        Group, on_delete=models.CASCADE, related_name="groupchat_of_group")
-    status = models.BooleanField(_('public_conference'), default=True)
-    message = models.TextField(blank=True)
-
-    def __str__(self):
-        return "%s" % self.user
-
-
-class GroupUser(models.Model):
-    user = models.ForeignKey(
-        'users.CustomUser', on_delete=models.CASCADE, related_name="groupuser_of_user")
-    groug = models.ForeignKey(
-        Group, on_delete=models.CASCADE, related_name="groupuser_of_gruop")
-    created_at = models.DateTimeField(null=False, default=now)
-
-    def __str__(self):
-        return "%s" % self.user
-
-
-class Room(models.Model):
-    """Модель комнаты чата"""
-    room_name = models.CharField(max_length=100,blank=True)
-    creator = models.ForeignKey(User, verbose_name="Создатель", on_delete=models.CASCADE)
-    invited = models.ForeignKey(User, verbose_name="Участник", on_delete=models.CASCADE, related_name="invited_user")
-    timestamp = models.DateTimeField("Дата создания", auto_now_add=True)
-    created_at = models.DateTimeField(null=False, default=now)
-    status = models.BooleanField(_('public_conference'), default=True)
-    conference = models.ForeignKey('conference.Conference',null=True, blank=True, on_delete=models.CASCADE)
-    
-    class Meta:
-        verbose_name = "Комната чата"
-        verbose_name_plural = "Комнаты чатов"
+        return self.user.username
 
 
 class Message(models.Model):
-    room = models.ForeignKey(Room,blank=True,null=True,  verbose_name="Комната чата", on_delete=models.CASCADE)
-    sender = models.ForeignKey(
-        CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='sender')
-    receiver = models.ForeignKey(
-        CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='receiver')
-    message = models.CharField(max_length=1200)
+    contact = models.ForeignKey(
+        Contact, related_name='messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    conference = models.ForeignKey('conference.Conference',null=True, blank=True, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.contact.user.username
+
+
+class Chat(models.Model):
+    participants = models.ManyToManyField(
+        Contact, related_name='chats', blank=True)
+    messages = models.ManyToManyField(Message, blank=True)
+
     timestamp = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
     file = models.FileField(upload_to='chat', blank=True)
@@ -72,7 +44,4 @@ class Message(models.Model):
     status = models.BooleanField(_('public_conference'), default=True)
 
     def __str__(self):
-        return self.message
-
-    class Meta:
-        ordering = ('timestamp',)
+        return "{}".format(self.pk)
