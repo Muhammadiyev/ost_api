@@ -10,6 +10,7 @@ RUN apk update \
     && apk add jpeg-dev zlib-dev libjpeg \
     && pip install Pillow \
     && pip install cryptography \
+    && apt-get purge -y --auto-remove gcc and-build-dependencies \
     && apk del build-deps
 RUN pip install --upgrade pip
 COPY requirements.txt /usr/src/app/
