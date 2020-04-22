@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     "chat_room",
-    #'channels'
+    'channels'
 ]
 
 MIDDLEWARE = [
