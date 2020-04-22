@@ -15,7 +15,7 @@ urlpatterns = [
     path('api/v1/', include('conference.urls', namespace='conference')),
     path('api/v1/', include('groups.urls')),
     path('api/v1/', include('uploaded_choices.urls')),
-
+    path('api/v1/chat/', include("chat_room.urls")),
     path('base-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
     path('auth_token/', include('djoser.urls.authtoken')),
