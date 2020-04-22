@@ -7,7 +7,7 @@ venv
 staticfiles
 celerybeat-schedule
 variables.py
-__pycache__
+
 .env.dev
 .env.prod
 .env.prod.db

@@ -40,8 +40,12 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_filters',
     'djoser',
+<<<<<<< HEAD
     "chat_room",
     'channels'
+=======
+    'channels',
+>>>>>>> origin
 ]
 
 MIDDLEWARE = [
@@ -73,6 +77,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ost_api.wsgi.application'
+ASGI_APPLICATION = "ost_api.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 # Database
