@@ -9,6 +9,7 @@ RUN apk update \
     && pip install psycopg2 \
     && apk add jpeg-dev zlib-dev libjpeg \
     && pip install Pillow \
+    && pip install cryptography \
     && apk del build-deps
 RUN pip install --upgrade pip
 COPY requirements.txt /usr/src/app/
