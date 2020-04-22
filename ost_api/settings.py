@@ -40,12 +40,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_filters',
     'djoser',
-<<<<<<< HEAD
     "chat_room",
-    'channels'
-=======
-    'channels',
->>>>>>> origin
+    #'channels'
 ]
 
 MIDDLEWARE = [
