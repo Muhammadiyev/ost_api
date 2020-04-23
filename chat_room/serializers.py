@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
 User = get_user_model()
-
 from chat_room.models import Room, Chat
 
 
@@ -29,11 +27,11 @@ class ChatSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Chat
-        fields = ("user", "message", "date")
+        fields = ("user", "text", "date")
 
 
 class ChatPostSerializers(serializers.ModelSerializer):
     """Сериализация чата"""
     class Meta:
         model = Chat
-        fields = ("room", "message")
+        fields = ("room", "text")
