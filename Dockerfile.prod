@@ -10,6 +10,7 @@ RUN apk update \
     && apk add jpeg-dev zlib-dev libjpeg \
     && pip install Pillow \
     && apk del build-deps
+RUN apk add --no-cache curl python3 pkgconfig python3-dev openssl-dev libffi-dev musl-dev make gcc
 RUN pip install --upgrade pip
 COPY requirements.txt /usr/src/app/
 RUN pip install -r requirements.txt
