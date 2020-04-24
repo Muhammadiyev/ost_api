@@ -1,38 +1,49 @@
+from django.contrib.auth import get_user_model, password_validation
+from rest_framework.authtoken.models import Token
 from rest_framework import serializers
-from .models import Chat, Contact
-from .consumers import get_user_contact
+from django.contrib.auth.models import BaseUserManager
+from .models import Message, Room
+from users.models import CustomUser
+from users.serializers import UserOfRoleSerializer
+
+User = get_user_model()
 
 
-class ContactSerializer(serializers.StringRelatedField):
-    def to_internal_value(self, value):
-        return value
+class UserSerializer(serializers.ModelSerializer):
+    """Сериализация пользователя"""
+    class Meta:
+        model = User
+        fields = ("id", "username")
 
 
-class ChatSerializer(serializers.ModelSerializer):
-    participants = ContactSerializer(many=True)
+class RoomSerializer(serializers.ModelSerializer):
+    """Сериализация комнат чата"""
 
     class Meta:
-        model = Chat
-        fields = ('id', 'messages', 'participants')
-        read_only = ('id')
+        model = Room
+        fields = ("id",'room_name', "creator", "invited",'conference', "timestamp",'status')
 
-    def create(self, validated_data):
-        print(validated_data)
-        participants = validated_data.pop('participants')
-        chat = Chat()
-        chat.save()
-        for username in participants:
-            contact = get_user_contact(username)
-            chat.participants.add(contact)
-        chat.save()
-        return chat
+class RoomGetSerializer(serializers.ModelSerializer):
+    """Сериализация комнат чата"""
+    creator = UserSerializer()
+    invited = UserSerializer()
+
+    class Meta:
+        model = Room
+        fields = ("id",'room_name', "creator", "invited",'conference', "timestamp",'status')
+
+class MessageSerializer(serializers.ModelSerializer):
+    """Сериализация чата"""
+    sender = UserSerializer()
+    receiver = UserSerializer()
+
+    class Meta:
+        model = Message
+        fields = ('id', "sender",'receiver', "message", "timestamp",'status','conference')
 
 
-# do in python shell to see how to serialize data
-
-# from chat.models import Chat
-# from chat.api.serializers import ChatSerializer
-# chat = Chat.objects.get(id=1)
-# s = ChatSerializer(instance=chat)
-# s
-# s.data
+class MessagePostSerializer(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = Message
+        fields = ['id','room', 'sender','receiver', 'message', 'timestamp','file','is_read','conference','status']
