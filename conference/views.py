@@ -75,6 +75,26 @@ class ConferenceViewSet(viewsets.ModelViewSet):
             id__in=userIds).values_list('email', flat=True)
         send_email(email)
         return response
+
+
+class ConferenceFViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConferenceSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['typeconf', 'user']
+
+    def create(self, request, *args, **kwargs):
+        response = super(ConferenceFViewSet, self).create(
+            request, *args, **kwargs)
+        userIds = request.data['usersofroleofdepartments']
+                    
+        email = User.objects.filter(
+            id__in=userIds).values_list('email', flat=True)
+        send_email(email)
+        return response
         
 def send_otp(phone):
     if phone:

@@ -4,6 +4,7 @@ from django.urls import path, include, re_path
 from .views import (
     TypeConfViewSet,
     ConferenceViewSet, 
+    ConferenceFViewSet,
     ConferenceUserViewSet, 
     ConferenceGetViewSet,
     ConferencePhoneViewSet,
@@ -17,6 +18,7 @@ router = routers.DefaultRouter(trailing_slash=False)
 
 router.register('typeconference', TypeConfViewSet)
 router.register('conferenceoff', ConferenceViewSet)
+router.register('conferenceon', ConferenceFViewSet)
 router.register('conference', ConferenceGetViewSet)
 router.register('conferenceuser', ConferenceUserViewSet)
 router.register('phone', ConferencePhoneViewSet)
