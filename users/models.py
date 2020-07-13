@@ -63,8 +63,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'phone'
+    #REQUIRED_FIELDS = ['phone']
 
     @property
     def users(self):
