@@ -4,7 +4,7 @@ from django.contrib.auth.base_user import BaseUserManager
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user_admin(self, phone, password=None, is_staff=False, is_active=True, is_admin=False):
+    def create_user_admin(self, phone, password=None, is_staff=True):
         if not phone:
             raise ValueError('users must have a phone number')
         if not password:
@@ -13,7 +13,6 @@ class UserManager(BaseUserManager):
         user_obj = self.model(phone=phone)
         user_obj.set_password(password)
         user_obj.is_staff = is_staff
-        user_obj.is_active = is_active
         user_obj.save(using=self._db)
         return user_obj
 
@@ -39,5 +38,4 @@ class UserManager(BaseUserManager):
             phone,
             password=password,
             is_staff=True,
-            is_active=True,
-        )
+            )
