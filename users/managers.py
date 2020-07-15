@@ -4,13 +4,13 @@ from django.contrib.auth.base_user import BaseUserManager
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user_admin(self, phone, password=None, is_staff=True):
-        if not phone:
-            raise ValueError('users must have a phone number')
+    def create_user_admin(self, username, password=None, is_staff=True):
+        if not username:
+            raise ValueError('users must have a username number')
         if not password:
-            raise ValueError('user must have a phone password')
+            raise ValueError('user must have a username password')
 
-        user_obj = self.model(phone=phone)
+        user_obj = self.model(username=username)
         user_obj.set_password(password)
         user_obj.is_staff = is_staff
         user_obj.save(using=self._db)
@@ -33,9 +33,9 @@ class UserManager(BaseUserManager):
         return self._create_user(username, email, password, **extra_fields)
 
 
-    def create_superuser(self, phone, password=None):
+    def create_superuser(self, username, password=None):
         user = self.create_user_admin(
-            phone,
+            username,
             password=password,
             is_staff=True,
             )

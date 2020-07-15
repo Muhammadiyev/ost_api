@@ -63,7 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'phone'
+    USERNAME_FIELD = 'username'
     #REQUIRED_FIELDS = ['phone']
 
     @property
