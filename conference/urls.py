@@ -9,7 +9,8 @@ from .views import (
     ConferenceGetViewSet,
     ConferencePhoneViewSet,
     ConfUserIDViewSet,
-    ConfUsersIDViewSet
+    ConfUsersIDViewSet,
+    ConferenceUserIDViewSet
 )
 
 app_name = 'conference'
@@ -23,6 +24,8 @@ router.register('conference', ConferenceGetViewSet)
 router.register('conferenceuser', ConferenceUserViewSet)
 router.register('phone', ConferencePhoneViewSet)
 router.register('confuserid', ConfUserIDViewSet)
+router.register('confusers', ConferenceUserIDViewSet)
+
 router.register('confusersid', ConfUsersIDViewSet)
 
 

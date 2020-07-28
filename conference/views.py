@@ -124,6 +124,16 @@ class ConfUsersIDViewSet(viewsets.ModelViewSet):
     filter_fields = ['usersofroleofdepartments', 'typeconf','user']
 
 
+class ConferenceUserIDViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConfUserIDSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['usersofroleofdepartments', 'typeconf','user']
+    
+
 class ConfUserIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
