@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model, password_validation, authenticat
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers, exceptions
 from django.contrib.auth.models import BaseUserManager
-from .models import CustomUser, CreateUserMany
+from .models import CustomUser, CheckPasswordUser
 from company.models import Role
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
@@ -68,7 +68,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'password', 'company',
                   'parent', 'phone', 'role', 'department', 'status', 'conference', 'auth_token']
-        read_only_fields = ('id', 'is_active', 'is_staff')
+        read_only_fields = ('id', 'is_active')
 
     def create(self, validated_data):
         try:
@@ -154,16 +154,16 @@ class AuthUserSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(JSONWebTokenSerializer):
-    username_field = 'username_or_email'
+    username_field = 'username_or_phone'
 
     def validate(self, attrs):
 
         password = attrs.get("password")
-        user_obj = User.objects.filter(email=attrs.get("username_or_email")).first(
-        ) or User.objects.filter(username=attrs.get("username_or_email")).first()
+        user_obj = User.objects.filter(username=attrs.get("username_or_phone")).first(
+        ) or User.objects.filter(phone=attrs.get("username_or_phone")).first()
         if user_obj is not None:
             credentials = {
-                'username': user_obj.username,
+                'phone': user_obj.phone,
                 'password': password
             }
             if all(credentials.values()):
@@ -189,7 +189,7 @@ class UserLoginSerializer(JSONWebTokenSerializer):
                 raise serializers.ValidationError(msg)
 
         else:
-            msg = _('Account with this email/username does not exists')
+            msg = _('Account with this phone/username does not exists')
             raise serializers.ValidationError(msg)
 
 
@@ -263,21 +263,6 @@ class UserOfRoleSerializer(serializers.ModelSerializer):
                   'parent', 'children', 'company', ]
 
 
-class CreateUsermanySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CreateUserMany
-        fields = ['id', 'many_user']
-
-
-class CreateUserManySerializer(serializers.ModelSerializer):
-    many_user = CustomUserCreateSerializer(many=True)
-
-    class Meta:
-        model = CreateUserMany
-        fields = '__all__'
-
-
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -307,3 +292,19 @@ class TokenRefreshSerializer(serializers.Serializer):
             refresh.set_exp()
 
         return data
+
+
+class CheckPasswordUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CheckPasswordUser
+        fields = ['id','creator_user','user','check_password','is_active']
+
+class CheckPasswordUserListSerializer(serializers.ModelSerializer):
+    
+    creator_user = UserProfileSerializer(read_only=True)
+    user = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = CheckPasswordUser
+        fields = ['id','creator_user','user','check_password','is_active']

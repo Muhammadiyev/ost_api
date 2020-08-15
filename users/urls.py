@@ -8,6 +8,8 @@ from .views import (
     UserOfDepartmentViewSet,
     UserOfRoleOfViewSet,
     UsersViewSet,
+    CheckPasswordUserViewSet,
+    CheckPasswordUserListViewSet
 )
 
 
@@ -19,5 +21,8 @@ router.register('userofroleofdepartment',
 router.register('userofrole', UserOfRoleOfViewSet, basename='auth')
 router.register('users', UserAllViewSet)
 router.register('usersconf', UsersViewSet)
+
+router.register('check/password/users', CheckPasswordUserViewSet)
+router.register('check/password/userslist', CheckPasswordUserListViewSet)
 
 urlpatterns = router.urls

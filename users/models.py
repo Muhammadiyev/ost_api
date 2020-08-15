@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
@@ -30,7 +29,7 @@ def validate_image(fieldfile_obj):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
         'username', blank=True, max_length=50, unique=True)
-    email = models.EmailField('email address', unique=True)
+    email = models.EmailField('email address',blank=True,unique=True)
     first_name = models.CharField('First Name', max_length=255, blank=True,
                                   null=False)
     last_name = models.CharField('Last Name', max_length=255, blank=True,
@@ -63,7 +62,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'phone'
     #REQUIRED_FIELDS = ['phone']
 
     @property
@@ -82,12 +81,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def __str__(self):
-        return f"{self.email} - {self.first_name} {self.last_name}"
+        return f"{self.phone} - {self.email} - {self.username}"
 
 
-class CreateUserMany(models.Model):
-    many_user = models.ManyToManyField(CustomUser)
-    created_at = models.DateTimeField(null=False, default=now)
+class CheckPasswordUser(models.Model):
+    creator_user = models.ForeignKey(
+        'CustomUser', blank=True, null=True, related_name="creator_user", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        'CustomUser', blank=True, null=True, related_name="user", on_delete=models.CASCADE)
+    check_password = models.CharField(
+        'check_password', blank=True, max_length=150)
     is_active = models.BooleanField(_('active'), default=True)
 
 

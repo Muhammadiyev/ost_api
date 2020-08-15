@@ -12,9 +12,9 @@ from variables import (
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY','sdsadsd')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = True #int(os.environ.get('DEBUG', default=0))
+DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = ['*']
 
@@ -187,7 +187,3 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
-CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:8000',
-    'http://localhost:8080'
-)

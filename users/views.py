@@ -5,7 +5,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .models import CustomUser, CreateUserMany
+from .models import CustomUser, CheckPasswordUser
 from . import serializers
 from .utils import get_and_authenticate_user, create_user_account
 from rest_framework import authentication
@@ -175,3 +175,23 @@ class UsersViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['parent', 'company']
+
+
+class CheckPasswordUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = CheckPasswordUser.objects.all()
+    serializer_class = serializers.CheckPasswordUserSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['creator_user', 'user']
+
+
+class CheckPasswordUserListViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = CheckPasswordUser.objects.all()
+    serializer_class = serializers.CheckPasswordUserListSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['creator_user', 'user']

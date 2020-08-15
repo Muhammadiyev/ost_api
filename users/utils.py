@@ -12,15 +12,15 @@ def get_and_authenticate_user(email, password):
     return user
 
 
-def create_user_account(email, password,department="", first_name="", last_name="", **extra_fields):
+def create_user_account(phone, password, **extra_fields):
     user = get_user_model().objects.create_user(
-        email=email, password=password,department=department, first_name=first_name, last_name=last_name, **extra_fields)
+        phone=phone, password=password, **extra_fields)
     return user
 
 
-def create_user_accounts(email, password,department, first_name="",last_name="", **kwargs):
-    if email:
-        User.objects.create_user(
-        email=email, password=password,department=department, first_name=first_name,
-        last_name=last_name)
+# def create_user_accounts(email, password,department, first_name="",last_name="", **kwargs):
+#     if email:
+#         User.objects.create_user(
+#         email=email, password=password,department=department, first_name=first_name,
+#         last_name=last_name)
     
