@@ -12,9 +12,9 @@ from variables import (
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY','sdsdsdd')
 
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = 1 #int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = ['*']
 

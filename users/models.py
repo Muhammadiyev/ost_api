@@ -44,7 +44,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     city = models.CharField(max_length=100,blank=True)
     is_active = models.BooleanField(_('active'), default=True)
-    is_staff = models.BooleanField(_('staff status'), default=False)
+    is_staff = models.BooleanField(default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
     role = models.ForeignKey(
@@ -59,11 +59,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     company = models.ForeignKey(
         'company.Company', blank=True, null=True, related_name="user_of_company", on_delete=models.CASCADE)
     order = models.IntegerField(default=1,blank=True)
-
+    
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'
     #REQUIRED_FIELDS = ['phone']
+
+    @property
+    def is_staff(self):
+        return self.is_superuser
 
     @property
     def users(self):
