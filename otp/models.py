@@ -7,7 +7,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.timezone import now
-from company.models import Role, Department
+from company.models import Department
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver

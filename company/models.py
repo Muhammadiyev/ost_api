@@ -17,21 +17,6 @@ class Company(models.Model):
     def users(self):
         return self.user_of_company
 
-class Role(models.Model):
-    name_uz = models.CharField(max_length=100, blank=True, null=True)
-    name_ru = models.CharField(max_length=100, blank=True, null=True)
-    is_active = models.BooleanField(_('active'), default=True)
-    created_at = models.DateTimeField(null=False, default=now)
-    parent = models.ForeignKey(
-        'self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.name_uz} - {self.name_ru}"
-
-    @property
-    def users(self):
-        return self.user_of_role
-
 
 class Department(models.Model):
     department_name_uz = models.CharField(max_length=100, blank=True, null=True)

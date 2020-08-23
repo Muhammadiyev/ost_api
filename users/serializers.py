@@ -6,7 +6,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework import serializers, exceptions
 from django.contrib.auth.models import BaseUserManager
 from .models import CustomUser, CheckPasswordUser
-from company.models import Role
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 from django.db import IntegrityError, transaction
@@ -14,7 +13,7 @@ from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
 from company.models import Department
 from . import tokens
-from company.serializers import RoleSerializer, DepartmentSerializer, RoleOfUserSerializer, CompanySerializer
+from company.serializers import DepartmentSerializer, CompanySerializer
 import rest_auth.serializers
 from django.core.validators import validate_email
 from rest_framework_jwt.settings import api_settings
@@ -67,7 +66,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id','username', 'email', 'password', 'company',
-                  'parent', 'phone', 'role', 'department', 'status', 'conference', 'auth_token']
+                  'parent', 'phone', 'department', 'status', 'conference', 'auth_token']
         read_only_fields = ('id', 'is_active')
 
     def create(self, validated_data):
@@ -105,14 +104,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    role = RoleOfUserSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
     company = CompanySerializer(read_only=True)
     #avatar = serializers.ImageField(validators=[validate_image])
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'role', 'status', 'conference', 'first_name', 'last_name', 'midname',
+        fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active','is_staff']
 
 
@@ -121,14 +119,14 @@ class UserRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'parent',
-                  'company', 'department', 'role']
+                  'company', 'department']
 
 
 class UserOfConferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'role']
+        fields = ['id', 'email']
 
 
 class EmptySerializer(serializers.Serializer):
@@ -232,34 +230,31 @@ class UserOfConfSerializer(serializers.ModelSerializer):
 
 class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
-    role = RoleSerializer(read_only=True)
     children = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'department',
-                  'parent', 'company', 'role',  'children']
+                  'parent', 'company',  'children']
 
 
 class UsersAllSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
-    role = RoleSerializer(read_only=True)
     id = serializers.IntegerField()
     
     class Meta:
         model = User
-        fields = ['id','order', 'username', 'email', 'parent', 'company', 'department', 'role','online_user', 'status', 'conference', 'first_name', 'last_name', 'midname',
+        fields = ['id','order', 'username', 'email', 'parent', 'company', 'department','online_user', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active']
 
 
 class UserOfRoleSerializer(serializers.ModelSerializer):
 
-    role = RoleSerializer(read_only=True)
     children = RecursiveSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role',
+        fields = ['id', 'username', 'email',
                   'parent', 'children', 'company', ]
 
 

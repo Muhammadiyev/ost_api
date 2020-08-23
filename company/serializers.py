@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, password_validation
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
-from .models import Company, Role, Department
+from .models import Company, Department
 from users.models import CustomUser
 
 User = get_user_model()
@@ -42,17 +42,3 @@ class DepartmentOfUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_of_department',
                   'parent', 'department_name_uz', 'department_name_ru','children']
 
-
-class RoleOfUserSerializer(serializers.ModelSerializer):
-    children = RRecursiveSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = Role
-        fields = ['id', 'user_of_role', 'parent', 'name_uz', 'name_ru', 'children']
-
-
-class RoleSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Role
-        fields = ['id', 'name_uz', 'name_ru']

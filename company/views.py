@@ -5,7 +5,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .models import Role, Department, Company
+from .models import Department, Company
 from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -23,25 +23,6 @@ class CompanyViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['user_of_company']
 
-
-class RoleViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = Role.objects.all()
-    serializer_class = serializers.RoleSerializer
-    authentication_classes = [authentication.JWTAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['user_of_role']
-
-
-class RoleOfUserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = Role.objects.all()
-    serializer_class = serializers.RoleOfUserSerializer
-    authentication_classes = [authentication.JWTAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['user_of_role']
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):

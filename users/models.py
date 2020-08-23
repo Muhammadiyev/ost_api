@@ -7,7 +7,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from .managers import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.timezone import now
-from company.models import Role, Department
+from company.models import  Department
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -47,8 +47,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
-    role = models.ForeignKey(
-        Role, blank=True, null=True, related_name="user_of_role", on_delete=models.CASCADE)
     department = models.ForeignKey(
         Department, blank=True, null=True, related_name="user_of_department", on_delete=models.CASCADE)
     parent = models.ForeignKey(
@@ -68,10 +66,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_superuser
-
-    @property
-    def users(self):
-        return self.role_of_user
 
     @property
     def users(self):
