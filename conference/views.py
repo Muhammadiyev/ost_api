@@ -114,6 +114,16 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
     filter_fields = ['typeconf', 'user']
 
 
+class ConferenceListViewSet(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all().order_by('-created_at')
+    serializer_class = serializers.ConferenceGetSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['typeconf', 'user__company','user']
+    
+
 class ConfUsersIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
