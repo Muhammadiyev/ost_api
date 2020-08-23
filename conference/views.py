@@ -121,7 +121,7 @@ class ConferenceListViewSet(generics.ListAPIView):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['typeconf', 'user__company','user']
+    filter_fields = ['usersofroleofdepartments', 'user__company','user']
     
 
 class ConfUsersIDViewSet(viewsets.ModelViewSet):
