@@ -23,7 +23,7 @@ class UserOfDepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id','first_name', 'username', 'email', 'phone', 'department',
+        fields = ['id','first_name', 'last_name', 'midname', 'username', 'email', 'phone', 'department',
                   'parent', 'company']
 
 class CompanySerializer(serializers.ModelSerializer):
