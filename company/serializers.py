@@ -4,7 +4,6 @@ from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
 from .models import Company, Department
 from users.models import CustomUser
-
 User = get_user_model()
 
 
@@ -19,6 +18,13 @@ class RRecursiveSerializer(serializers.Serializer):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
 
+
+class UserOfDepartmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['id','first_name', 'username', 'email', 'phone', 'department',
+                  'parent', 'company']
 
 class CompanySerializer(serializers.ModelSerializer):
 
@@ -42,3 +48,12 @@ class DepartmentOfUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_of_department',
                   'parent', 'department_name_uz', 'department_name_ru','children']
 
+
+class DepartmentOfUsersSerializer(serializers.ModelSerializer):
+    children = DRecursiveSerializer(read_only=True, many=True)
+    user_of_department = UserOfDepartmentSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Department
+        fields = ['id', 'user_of_department',
+                  'parent', 'department_name_uz', 'department_name_ru','children']

@@ -60,6 +60,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     objects = UserManager()
 
+
     USERNAME_FIELD = 'phone'
     #REQUIRED_FIELDS = ['phone']
 
