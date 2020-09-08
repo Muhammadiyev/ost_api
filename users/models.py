@@ -28,8 +28,8 @@ def validate_image(fieldfile_obj):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
-        'username', blank=True, max_length=50, unique=True)
-    email = models.EmailField('email address',blank=True,unique=True)
+        'username', blank=True,null=True, max_length=50, unique=True)
+    email = models.EmailField('email address',blank=True,null=True,unique=True)
     first_name = models.CharField('First Name', max_length=255, blank=True,
                                   null=False)
     last_name = models.CharField('Last Name', max_length=255, blank=True,
@@ -39,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,14}$', message="Phone number   must be entered in the format: '+999999999'. Up to 14 digits allowed.")
     phone = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True, unique=True)
+        validators=[phone_regex], max_length=17, blank=True,null=True, unique=True)
     last_seen = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     city = models.CharField(max_length=100,blank=True)

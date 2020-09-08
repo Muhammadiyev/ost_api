@@ -18,6 +18,10 @@ class TypeConf(models.Model):
     def __str__(self):
         return "%s" % self.name
 
+TYPE_CONFERENCE_CHOICES = [
+    (1 , "Conference"),
+    (2 , 'Vebinar')
+]
 
 class Conference(models.Model):
 
@@ -35,8 +39,7 @@ class Conference(models.Model):
     timezone = models.CharField(max_length=100, blank=True)
     duration = DurationField(blank=True, null=True)
     not_limited = models.BooleanField(_('not_limited'), default=False)
-    typeconf = models.ForeignKey(
-        TypeConf, blank=True, on_delete=models.CASCADE, related_name="conference_of_type")
+    typeconf = models.IntegerField(blank=True, null=True, choices=TYPE_CONFERENCE_CHOICES, default=1)
     save_conf = models.BooleanField(_('save_conference'), default=False)
     start_time = models.CharField(max_length=100, blank=True)
     protected = models.BooleanField(_('protected_conference'), default=True)
