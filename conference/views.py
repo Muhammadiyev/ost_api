@@ -43,7 +43,7 @@ def send_email(email):
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
@@ -68,7 +68,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    payload = {'msisdn': phone, 'text': "vconf.pager.uz konferensiya ga kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
                     
         email = User.objects.filter(
@@ -94,12 +94,9 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    payload = {'msisdn': phone, 'text':"(eslatma) vconf.pager.uz konferensiya kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
-                    
-        email = User.objects.filter(
-            id__in=userIds).values_list('email', flat=True)
-        send_email(email)
+
 
         return response
 
