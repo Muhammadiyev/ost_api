@@ -43,7 +43,7 @@ def send_email(email):
 
 
 class ConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.ConferenceSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
@@ -89,7 +89,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
-        
+
         if len(phone_number) != 0:
             for ph in phone_number:
                 phone = str(ph)
