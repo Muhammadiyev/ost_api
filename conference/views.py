@@ -74,6 +74,33 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
         send_email(email)
+
+        return response
+    
+    def update(self, request, *args, **kwargs):
+        response = super(ConferenceViewSet, self).update(
+            request, *args, **kwargs)
+        userIds = request.data['usersofroleofdepartments']
+        phone = User.objects.filter(
+            id__in=userIds).values_list('phone', flat=True)
+        phone_number = list(phone)
+        
+        if len(phone_number) != 0:
+            for ph in phone_number:
+                phone = str(ph)
+                user = User.objects.filter(phone__iexact=phone)
+                key = send_otp(phone)
+                if key:
+                    PhoneOTP.objects.create(phone=phone, otp=key)
+                    payload = {'msisdn': phone}
+                    r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
+                    payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get(settings.SMS_URL, params=payload)
+                    
+        email = User.objects.filter(
+            id__in=userIds).values_list('email', flat=True)
+        send_email(email)
+
         return response
 
 
