@@ -18,6 +18,7 @@ urlpatterns = [
     path('api/v1/chat/', include("chat_room.urls")),
     path('base-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
     path('auth_token/', include('djoser.urls.authtoken')),
 
     url(r'^api/password_reset/',

@@ -77,6 +77,40 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         return response
 
 
+class ConferenceUpdatedViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Conference.objects.all()
+    serializer_class = serializers.ConferenceSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['typeconf', 'user']
+
+    def update(self, request, *args, **kwargs):
+        response = super(ConferenceUpdatedViewSet, self).create(
+            request, *args, **kwargs)
+        userIds = request.data['usersofroleofdepartments']
+        phone = User.objects.filter(
+            id__in=userIds).values_list('phone', flat=True)
+        phone_number = list(phone)
+
+        if len(phone_number) != 0:
+            for ph in phone_number:
+                phone = str(ph)
+                user = User.objects.filter(phone__iexact=phone)
+                key = send_otp(phone)
+                if key:
+                    PhoneOTP.objects.create(phone=phone, otp=key)
+                    payload = {'msisdn': phone}
+                    r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
+                    payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get(settings.SMS_URL, params=payload)
+                    
+        email = User.objects.filter(
+            id__in=userIds).values_list('email', flat=True)
+        send_email(email)
+        return response
+
 class ConferenceFViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()

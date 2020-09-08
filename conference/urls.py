@@ -10,7 +10,8 @@ from .views import (
     ConferencePhoneViewSet,
     ConfUserIDViewSet,
     ConfUsersIDViewSet,
-    ConferenceUserIDViewSet
+    ConferenceUserIDViewSet,
+    ConferenceUpdatedViewSet
 )
 
 app_name = 'conference'
@@ -18,7 +19,10 @@ app_name = 'conference'
 router = routers.DefaultRouter(trailing_slash=False)
 
 router.register('typeconference', TypeConfViewSet)
+
 router.register('conferenceoff', ConferenceViewSet)
+router.register('conferenceupdated', ConferenceUpdatedViewSet)
+
 router.register('conferenceon', ConferenceFViewSet)
 router.register('conference', ConferenceGetViewSet)
 router.register('conferenceuser', ConferenceUserViewSet)
