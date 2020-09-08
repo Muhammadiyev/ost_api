@@ -58,17 +58,21 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
+        username = User.objects.filter(
+            id__in=users).values_list('first_name', flat=True)
+        user_conf = list(username)
 
         if len(phone_number) != 0:
             for ph in phone_number:
                 phone = str(ph)
                 user = User.objects.filter(phone__iexact=phone)
+
                 key = send_otp(phone)
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text': "vconf.pager.uz konferensiya ga kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    payload = {'msisdn': phone, 'text': "vconf.pager.uz {user_conf}: sizni konferentsiyaga taklif qiladi: kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
                     
         email = User.objects.filter(
@@ -81,22 +85,26 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         response = super(ConferenceViewSet, self).update(
             request, *args, **kwargs)
         userIds = request.data['usersofroleofdepartments']
+        users = request.data['user']
+        username = User.objects.filter(
+            id__in=users).values_list('first_name', flat=True)
+        user_conf = list(username)
+
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
-        
         if len(phone_number) != 0:
             for ph in phone_number:
                 phone = str(ph)
                 user = User.objects.filter(phone__iexact=phone)
                 key = send_otp(phone)
+                
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
                     payload = {'msisdn': phone, 'text':"(eslatma) vconf.pager.uz konferensiya kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
-
 
         return response
 
