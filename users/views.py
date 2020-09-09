@@ -199,7 +199,7 @@ class CheckPasswordUserListViewSet(viewsets.ModelViewSet):
 
 
 class StatisticUsersViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = User.objects.all()
     serializer_class = serializers.StatisticUsersSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
@@ -210,6 +210,11 @@ class StatisticUsersViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = User.objects.all()
         queryset = queryset.annotate(
-            static_users=Count('children', distinct=True))
+            static_users=Count('children', distinct=True),
+            static_city=Count('city', distinct=True),
+            static_conf=Count('conference_of_user', distinct=True),
+            static_conf_users=Count('conference_of_users', distinct=True))
+            # static_conf_status_true=Count(Case(When(conference_of_user__status=True, then=True))),
+            # static_conf_status_false=Count(Case(When(conference_of_user__status=False, then=False))))   
          
         return queryset
