@@ -57,3 +57,13 @@ class DepartmentOfUsersSerializer(serializers.ModelSerializer):
         model = Department
         fields = ['id', 'user_of_department',
                   'parent', 'department_name_uz', 'department_name_ru','children']
+
+
+class StatisticDepartmentSerializer(serializers.ModelSerializer):
+    static_department = serializers.IntegerField()
+
+    class Meta:
+        model = Department
+        fields = ['id','static_department',
+                 'department_name_uz', 'department_name_ru']
+

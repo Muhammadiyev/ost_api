@@ -11,6 +11,8 @@ from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework_simplejwt import authentication
 from permissions.permissions import UserHasPermission
+from django.db.models import Count, Sum, Max, Min,Avg, F,BooleanField, Case, When, Q, IntegerField, FloatField
+
 User = get_user_model()
 
 
@@ -53,3 +55,20 @@ class DepartmentOfUsersViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['user_of_department']
+
+
+class StatisticDepartmentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Department.objects.all()
+    serializer_class = serializers.StatisticDepartmentSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['user_of_department']
+
+    def get_queryset(self):
+        queryset = Department.objects.all()
+        queryset = queryset.annotate(
+            static_department=Count('user_of_department', distinct=True))
+         
+        return queryset
