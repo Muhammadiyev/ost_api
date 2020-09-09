@@ -26,6 +26,24 @@ def validate_image(fieldfile_obj):
         raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
 
+AREAS_OF_UZBEKISTAN_CHOICES = [
+    (1, "Qoraqalpog‘iston Respublikasi"),
+    (2, 'Andijon viloyati'),
+    (3, 'Buxoro viloyati'),
+    (4, 'Jizzax viloyati'),
+    (5, 'Qashqadaryo viloyati'),
+    (6, 'Navoiy viloyati'),
+    (7, 'Namangan viloyati'),
+    (8, 'Samarqand viloyati'),
+    (9, 'Sirdaryo viloyati'),
+    (10, 'Surxondaryo viloyati'),
+    (11, 'Toshkent viloyati'),
+    (12, "Farg‘ona viloyati"),
+    (13, 'Xorazm viloyati'),
+    (14, "Toshkent shahri")
+]
+
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
         'username', blank=True,null=True, max_length=50, unique=True)
@@ -42,7 +60,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         validators=[phone_regex], max_length=17, blank=True,null=True, unique=True)
     last_seen = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
-    city = models.CharField(max_length=100,blank=True)
+    city = models.IntegerField(blank=True, null=True, choices=AREAS_OF_UZBEKISTAN_CHOICES, default=14)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)

@@ -265,6 +265,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'phone', 'first_login']
 
 
+class StatisticUsersSerializer(serializers.ModelSerializer):
+    static_users = serializers.IntegerField()
+    class Meta:
+        model = User
+        fields = ['id','static_users', 'phone','username', 'email', 'first_name']
+
 class TokenRefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 

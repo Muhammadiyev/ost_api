@@ -19,6 +19,7 @@ from django.shortcuts import get_object_or_404
 from permissions.permissions import UserHasPermission
 from rest_framework_simplejwt.exceptions import TokenBackendError, TokenError, InvalidToken
 import random
+from django.db.models import Count, Sum, Max, Min,Avg, F,BooleanField, Case, When, Q, IntegerField, FloatField
 from .authentication import AUTH_HEADER_TYPES
 User = get_user_model()
 
@@ -195,3 +196,20 @@ class CheckPasswordUserListViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['creator_user', 'user']
+
+
+class StatisticUsersViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = serializers.StatisticUsersSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['company']
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        queryset = queryset.annotate(
+            static_users=Count('children', distinct=True))
+         
+        return queryset

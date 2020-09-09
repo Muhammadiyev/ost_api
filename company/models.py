@@ -25,6 +25,8 @@ class Department(models.Model):
     created_at = models.DateTimeField(null=False, default=now)
     parent = models.ForeignKey(
         'self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        'users.CustomUser', blank=True, null=True, related_name='department_of_user', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.department_name_uz} - {self.department_name_ru}"
