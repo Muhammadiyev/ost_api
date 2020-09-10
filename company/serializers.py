@@ -37,7 +37,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ['id', 'department_name_uz','department_name_ru', 'user']
+        fields = ['id', 'department_name_uz','department_name_ru', 'user','parent']
 
 
 class DepartmentOfUserSerializer(serializers.ModelSerializer):
