@@ -113,6 +113,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'status', 'conference', 'first_name', 'last_name', 'midname',
                   'phone', 'last_seen', 'city', 'avatar', 'is_active','is_staff']
 
+class UserProfileListSerializer(serializers.ModelSerializer):
+    # department = DepartmentSerializer(read_only=True)
+    # company = CompanySerializer(read_only=True)
+    #avatar = serializers.ImageField(validators=[validate_image])
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'parent', 'company', 'department', 'status', 'conference', 'first_name', 'last_name', 'midname',
+                  'phone', 'last_seen', 'city', 'avatar', 'is_active','is_staff']
 
 class UserRoleSerializer(serializers.ModelSerializer):
 

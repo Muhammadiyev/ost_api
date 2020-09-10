@@ -113,7 +113,7 @@ class UserAllViewSet(viewsets.ModelViewSet):
 class UsersListViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
-    serializer_class = serializers.UserProfileSerializer
+    serializer_class = serializers.UserProfileListSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
