@@ -199,7 +199,7 @@ class CheckPasswordUserListViewSet(viewsets.ModelViewSet):
 
 
 class StatisticUsersViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = serializers.StatisticUsersSerializer
     authentication_classes = [authentication.JWTAuthentication, ]

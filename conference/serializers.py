@@ -22,6 +22,19 @@ class ConferenceSerializer(serializers.ModelSerializer):
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
                   'save_conf', 'start_time', 'protected', 'status','start_status', 'user','usersofroleofdepartments','created_at','room_name']
 
+class StatisticConferenceSerializer(serializers.ModelSerializer):
+
+    static_conf = serializers.IntegerField()
+    static_conf_users = serializers.IntegerField()
+    typeconf = serializers.IntegerField()
+    user = serializers.IntegerField()
+
+    class Meta:
+        model = Conference
+        fields = ['id','user','typeconf',
+        'static_conf','static_conf_users']
+
+
 class ConferenceGetSerializer(serializers.ModelSerializer):
     user = UserOfConfSerializer(read_only=True)
     

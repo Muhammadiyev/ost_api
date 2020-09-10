@@ -37,7 +37,7 @@ class Conference(models.Model):
         'users.CustomUser', on_delete=models.CASCADE, blank=True, related_name="conference_of_user")
     when = models.CharField(max_length=100, blank=True)
     timezone = models.CharField(max_length=100, blank=True)
-    duration = DurationField(blank=True, null=True)
+    duration = models.CharField(max_length=100, blank=True, null=True)
     not_limited = models.BooleanField(_('not_limited'), default=False)
     typeconf = models.IntegerField(blank=True, null=True, choices=TYPE_CONFERENCE_CHOICES, default=1)
     save_conf = models.BooleanField(_('save_conference'), default=False)

@@ -18,6 +18,8 @@ from rest_framework import permissions, static, generics
 from permissions.permissions import UserHasPermission, IsAdminOrConferenceOwner
 import random
 from django.template.loader import render_to_string
+from django.db.models import Count, Sum, Max, Min,Avg, F,BooleanField, Case, When, Q, IntegerField, FloatField
+
 
 import requests
 
@@ -283,3 +285,23 @@ class ConferencePhoneViewSet(viewsets.ModelViewSet):
                 'status': False,
                 'detail': 'Please provide both phone and otp for validated'
             })
+
+
+class StatisticConferenceViewSet(viewsets.ModelViewSet):
+    permission_classes = []
+    queryset = Conference.objects.all()
+    serializer_class = serializers.StatisticConferenceSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['typeconf']
+
+    def get_queryset(self):
+        queryset = Conference.objects.all()
+        queryset = queryset.values('typeconf','user').annotate(
+            static_conf=Count('user', distinct=True),
+            static_conf_users=Count('usersofroleofdepartments', distinct=True))
+            # static_conf_status_true=Count(Case(When(conference_of_user__status=True, then=True))),
+            # static_conf_status_false=Count(Case(When(conference_of_user__status=False, then=False))))   
+         
+        return queryset
