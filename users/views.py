@@ -110,6 +110,14 @@ class UserAllViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
+class UsersListViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = serializers.UserProfileSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['parent', 'company']
 
 class UserOfDepartmentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

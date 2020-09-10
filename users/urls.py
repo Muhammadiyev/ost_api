@@ -3,6 +3,7 @@ from django.urls import path, include, re_path
 
 from .views import (
     UserAllViewSet,
+    UsersListViewSet,
     AuthViewSet,
     UserOfRoleOfDepartmentViewSet,
     UserOfDepartmentViewSet,
@@ -21,6 +22,7 @@ router.register('userofroleofdepartment',
                 UserOfRoleOfDepartmentViewSet, basename='auth')
 router.register('userofrole', UserOfRoleOfViewSet, basename='auth')
 router.register('users', UserAllViewSet)
+router.register('api/users', UsersListViewSet)
 router.register('usersconf', UsersViewSet)
 
 router.register('check/password/users', CheckPasswordUserViewSet)
