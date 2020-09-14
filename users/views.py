@@ -218,11 +218,39 @@ class StatisticUsersViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = User.objects.all()
         queryset = queryset.annotate(
-            static_users=Count('children', distinct=True),
-            static_city=Count('city', distinct=True),
-            static_conf=Count('conference_of_user', distinct=True),
-            static_conf_users=Count('conference_of_users', distinct=True))
-            # static_conf_status_true=Count(Case(When(conference_of_user__status=True, then=True))),
-            # static_conf_status_false=Count(Case(When(conference_of_user__status=False, then=False))))   
-         
+            static_users=Count('children', distinct=True))
+              
+        return queryset
+
+class StatisticUsersCityViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = serializers.StatisticUsersCitySerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['company']
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        queryset = queryset.values('city').annotate(
+            static_city=Count('city'))
+              
+        return queryset
+
+
+class StatisticUsersAllViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = serializers.StatisticUsersAllSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['company']
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        queryset = queryset.values('id').annotate(
+            count_users=Sum('id')).order_by('-id')[:1]
+              
         return queryset

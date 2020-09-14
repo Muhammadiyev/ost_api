@@ -24,16 +24,26 @@ class ConferenceSerializer(serializers.ModelSerializer):
 
 class StatisticConferenceSerializer(serializers.ModelSerializer):
 
-    static_conf = serializers.IntegerField()
-    static_conf_users = serializers.IntegerField()
-    typeconf = serializers.IntegerField()
-    user = serializers.IntegerField()
+    static_conf = serializers.IntegerField(read_only=True)
+    typeconf = serializers.IntegerField(read_only=True)
+    user = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Conference
-        fields = ['id','user','typeconf',
-        'static_conf','static_conf_users']
+        fields = ['id','user','typeconf', 'static_conf']
 
+
+class StatisticConferenceUsersSerializer(serializers.ModelSerializer):
+
+    static = serializers.IntegerField(read_only=True)
+   
+    conference_of_users__typeconf = serializers.IntegerField(read_only=True)
+    #conference_of_user = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ['id','conference_of_users__typeconf', 'static']
+        
 
 class ConferenceGetSerializer(serializers.ModelSerializer):
     user = UserOfConfSerializer(read_only=True)

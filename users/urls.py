@@ -11,7 +11,9 @@ from .views import (
     UsersViewSet,
     CheckPasswordUserViewSet,
     CheckPasswordUserListViewSet,
-    StatisticUsersViewSet
+    StatisticUsersViewSet,
+    StatisticUsersCityViewSet,
+    StatisticUsersAllViewSet
 )
 
 
@@ -28,6 +30,8 @@ router.register('usersconf', UsersViewSet)
 router.register('check/password/users', CheckPasswordUserViewSet)
 router.register('check/password/userslist', CheckPasswordUserListViewSet)
 
-router.register('api/users/statistic', StatisticUsersViewSet)
+router.register('api/usersstatistic', StatisticUsersViewSet)
+router.register('api/citystatistic', StatisticUsersCityViewSet)
+router.register('api/usersallstatistic', StatisticUsersAllViewSet)
 
 urlpatterns = router.urls

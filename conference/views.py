@@ -288,20 +288,34 @@ class ConferencePhoneViewSet(viewsets.ModelViewSet):
 
 
 class StatisticConferenceViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
     serializer_class = serializers.StatisticConferenceSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['typeconf']
+    filter_fields = ['typeconf','user']
 
     def get_queryset(self):
         queryset = Conference.objects.all()
         queryset = queryset.values('typeconf','user').annotate(
-            static_conf=Count('user', distinct=True),
-            static_conf_users=Count('usersofroleofdepartments', distinct=True))
-            # static_conf_status_true=Count(Case(When(conference_of_user__status=True, then=True))),
-            # static_conf_status_false=Count(Case(When(conference_of_user__status=False, then=False))))   
+            static_conf=Count('user')) 
+         
+        return queryset
+
+
+class StatisticConferenceUsersViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = serializers.StatisticConferenceUsersSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['id','conference_of_users__typeconf']
+    
+    def get_queryset(self):
+        queryset = User.objects.all()
+        queryset = queryset.values('conference_of_users__typeconf','id').annotate(
+            static=Count('conference_of_users',distinct=True )) 
          
         return queryset

@@ -275,16 +275,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class StatisticUsersSerializer(serializers.ModelSerializer):
-    static_users = serializers.IntegerField()
-    static_city = serializers.IntegerField()
-    static_conf = serializers.IntegerField()
-    static_conf_users = serializers.IntegerField()
-    # static_conf_status_true = serializers.IntegerField()
-    # static_conf_status_false = serializers.IntegerField()
+    static_users = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id','static_conf','static_conf_users','static_users', 'static_city','city','phone','username', 'email', 'first_name']
+        fields = ['id','static_users','city','phone','username', 'email', 'first_name']
+
+
+class StatisticUsersCitySerializer(serializers.ModelSerializer):
+    static_city = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id','static_city','city']
+
+
+class StatisticUsersAllSerializer(serializers.ModelSerializer):
+    count_users = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['count_users']
 
 class TokenRefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField()

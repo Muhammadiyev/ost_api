@@ -60,7 +60,7 @@ class DepartmentOfUsersSerializer(serializers.ModelSerializer):
 
 
 class StatisticDepartmentSerializer(serializers.ModelSerializer):
-    static_department = serializers.IntegerField()
+    static_department = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Department
