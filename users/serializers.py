@@ -329,7 +329,7 @@ class CheckPasswordUserSerializer(serializers.ModelSerializer):
 
 class CheckPasswordUserListSerializer(serializers.ModelSerializer):
     
-    creator_user = UserProfileSerializer(read_only=True)
+    #creator_user = UserProfileSerializer(read_only=True)
     user = UserProfileSerializer(read_only=True)
 
     class Meta:

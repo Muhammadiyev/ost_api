@@ -203,7 +203,7 @@ class CheckPasswordUserListViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['creator_user', 'user']
+    filter_fields = ['user__department','creator_user']
 
 
 class StatisticUsersViewSet(viewsets.ModelViewSet):
