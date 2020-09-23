@@ -152,7 +152,12 @@ class ConferenceFViewSet(viewsets.ModelViewSet):
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
 
-        
+    def create(self, request, *args, **kwargs):
+        response = super(ConferenceFViewSet, self).create(
+            request, *args, **kwargs)
+        userIds = request.data['usersofroleofdepartments']
+        return response
+
 def send_otp(phone):
     if phone:
         key = random.randint(9999, 99999)
