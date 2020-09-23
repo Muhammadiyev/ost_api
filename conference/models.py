@@ -48,7 +48,7 @@ class Conference(models.Model):
     usersofroleofdepartments = models.ManyToManyField(
         CustomUser, blank=True, related_name="conference_of_users")
     room_name = models.CharField(max_length=1000000, blank=True)
-    security_room = models.CharField(max_length=1000000, blank=True)
+    security_room = models.CharField(max_length=1000000, null=True, blank=True)
     waiting_room = models.BooleanField(_('waiting_room'), default=True)
     video_organizer = models.BooleanField(_('video_organizer'), default=True)
     video_participant = models.BooleanField(_('video_participant'), default=True)
