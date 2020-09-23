@@ -20,7 +20,18 @@ class ConferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
-                  'save_conf', 'start_time', 'protected', 'status','start_status', 'user','usersofroleofdepartments','created_at','room_name']
+                  'save_conf', 'start_time', 'protected', 'status',
+                  'start_status', 'user','usersofroleofdepartments','created_at']
+
+
+class ConferenceOnSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Conference
+        fields = ['id', 'theme', 'description', 'timezone','when','not_limited',
+                  'duration', 'typeconf','save_conf', 'start_time', 'protected', 'status',
+                  'start_status', 'user','usersofroleofdepartments','created_at','security_room',
+                  'waiting_room','organizer','participant','entrance_organizer','entrance_participant']
 
 class StatisticConferenceSerializer(serializers.ModelSerializer):
 
@@ -82,6 +93,30 @@ class ConfUsersIDSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'theme', 'when', 'status', 'user']
 
 
+class ConfeUsersIDSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserOfConfSerializer(read_only=True)
+    usersofroleofdepartments = UsersAllSerializer(many=True)
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Conference
+        fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration',
+                  'save_conf', 'start_time', 'protected', 'status','start_status','user','usersofroleofdepartments','created_at']
+
+    def update(self, instance, validated_data):
+        all_users_data = validated_data.pop('usersofroleofdepartments')
+        for usersofroleofdepartments in all_users_data:
+            if 'id' in usersofroleofdepartments:
+                parcel_id = usersofroleofdepartments.pop('id')
+                User.objects.update_or_create(id=parcel_id, defaults=usersofroleofdepartments)
+            else:
+                user_id = validated_data['id']
+                usersofroleofdepartments = User.objects.create(user_id=user_id,**usersofroleofdepartments)
+                instance.usersofroleofdepartments.add(usersofroleofdepartments)
+   
+        return super(ConfeUsersIDSerializer, self).update(instance, validated_data)
+        
+
 class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
     user = UserOfConfSerializer(read_only=True)
     usersofroleofdepartments = UsersAllSerializer(many=True)
@@ -90,7 +125,9 @@ class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration',
-                  'save_conf', 'start_time', 'protected', 'status','start_status','user','usersofroleofdepartments','created_at','room_name']
+                  'save_conf', 'start_time', 'protected', 'status','start_status','user',
+                  'usersofroleofdepartments','created_at','room_name','security_room',
+                  'waiting_room','organizer','participant','entrance_organizer','entrance_participant']
 
     def update(self, instance, validated_data):
         all_users_data = validated_data.pop('usersofroleofdepartments')

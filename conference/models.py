@@ -48,6 +48,13 @@ class Conference(models.Model):
     usersofroleofdepartments = models.ManyToManyField(
         CustomUser, blank=True, related_name="conference_of_users")
     room_name = models.CharField(max_length=1000000, blank=True)
+    security_room = models.CharField(max_length=1000000, blank=True)
+    waiting_room = models.BooleanField(_('waiting_room'), default=True)
+    organizer = models.BooleanField(_('organizer'), default=True)
+    participant = models.BooleanField(_('participant'), default=True)
+    entrance_organizer = models.BooleanField(_('entrance_organizer'), default=True)
+    entrance_participant = models.BooleanField(_('entrance_participant'), default=True)
+
 
     def __str__(self):
         return "%s" % self.theme

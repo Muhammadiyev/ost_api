@@ -142,24 +142,16 @@ class ConferenceUpdatedViewSet(viewsets.ModelViewSet):
         send_email(email)
         return response
 
+
 class ConferenceFViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
-    serializer_class = serializers.ConferenceSerializer
+    serializer_class = serializers.ConferenceOnSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['typeconf', 'user']
 
-    def create(self, request, *args, **kwargs):
-        response = super(ConferenceFViewSet, self).create(
-            request, *args, **kwargs)
-        userIds = request.data['usersofroleofdepartments']
-                    
-        email = User.objects.filter(
-            id__in=userIds).values_list('email', flat=True)
-        send_email(email)
-        return response
         
 def send_otp(phone):
     if phone:
@@ -202,7 +194,7 @@ class ConfUsersIDViewSet(viewsets.ModelViewSet):
 class ConferenceUserIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Conference.objects.all()
-    serializer_class = serializers.ConfUserIDSerializer
+    serializer_class = serializers.ConfeUsersIDSerializer
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
