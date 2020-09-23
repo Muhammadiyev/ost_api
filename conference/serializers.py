@@ -31,7 +31,7 @@ class ConferenceOnSerializer(serializers.ModelSerializer):
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited',
                   'duration', 'typeconf','save_conf', 'start_time', 'protected', 'status',
                   'start_status', 'user','usersofroleofdepartments','created_at','security_room',
-                  'waiting_room','organizer','participant','entrance_organizer','entrance_participant']
+                  'waiting_room','video_organizer','video_participant','entrance_organizer','off_participant_volume']
 
 class StatisticConferenceSerializer(serializers.ModelSerializer):
 
@@ -127,7 +127,7 @@ class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration',
                   'save_conf', 'start_time', 'protected', 'status','start_status','user',
                   'usersofroleofdepartments','created_at','room_name','security_room',
-                  'waiting_room','organizer','participant','entrance_organizer','entrance_participant']
+                  'waiting_room','video_organizer','video_participant','entrance_organizer','off_participant_volume']
 
     def update(self, instance, validated_data):
         all_users_data = validated_data.pop('usersofroleofdepartments')

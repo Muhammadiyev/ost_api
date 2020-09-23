@@ -50,10 +50,10 @@ class Conference(models.Model):
     room_name = models.CharField(max_length=1000000, blank=True)
     security_room = models.CharField(max_length=1000000, blank=True)
     waiting_room = models.BooleanField(_('waiting_room'), default=True)
-    organizer = models.BooleanField(_('organizer'), default=True)
-    participant = models.BooleanField(_('participant'), default=True)
+    video_organizer = models.BooleanField(_('video_organizer'), default=True)
+    video_participant = models.BooleanField(_('video_participant'), default=True)
     entrance_organizer = models.BooleanField(_('entrance_organizer'), default=True)
-    entrance_participant = models.BooleanField(_('entrance_participant'), default=True)
+    off_participant_volume = models.BooleanField(_('off_participant_volume'), default=True)
 
 
     def __str__(self):
