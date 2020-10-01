@@ -78,3 +78,17 @@ class ConferenceUser(models.Model):
     # class Meta:
     #     verbose_name = 'Фирма'
     #     verbose_name_plural = 'Фирмы'
+
+
+class OneToOneConf(models.Model):
+    creator = models.ForeignKey(
+        'users.CustomUser', blank=True, null=True, on_delete=models.CASCADE, related_name="creator_of_user")
+    invited = models.ForeignKey(
+        'users.CustomUser', blank=True,null=True, on_delete=models.CASCADE, related_name="invited_of_user")
+    rating = models.IntegerField(blank=True, default=0)
+    status_call = models.BooleanField(_('status_call'), default=True)
+    status = models.BooleanField(_('status'), default=True)
+    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+    def __str__(self):
+        return f"{self.creator} - {self.invited} - {self.rating}"

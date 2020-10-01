@@ -5,7 +5,12 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .models import TypeConf, ConferenceUser, Conference
+from .models import (
+    Conference, 
+    ConferenceUser, 
+    TypeConf, 
+    OneToOneConf
+)
 from . import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -316,3 +321,23 @@ class StatisticConferenceUsersViewSet(viewsets.ModelViewSet):
             static=Count('conference_of_users',distinct=True )) 
          
         return queryset
+
+
+class OneToOneConfViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = OneToOneConf.objects.all()
+    serializer_class = serializers.OneToOneConfSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['creator','invited','status_call','status']
+
+
+class OneToOneConfListViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = OneToOneConf.objects.all()
+    serializer_class = serializers.OneToOneConfListSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['creator','invited','status_call','status']

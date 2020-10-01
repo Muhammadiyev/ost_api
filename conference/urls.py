@@ -13,7 +13,9 @@ from .views import (
     ConferenceUserIDViewSet,
     ConferenceUpdatedViewSet,
     StatisticConferenceViewSet,
-    StatisticConferenceUsersViewSet
+    StatisticConferenceUsersViewSet,
+    OneToOneConfViewSet,
+    OneToOneConfListViewSet
 
 )
 
@@ -37,6 +39,10 @@ router.register('confusersid', ConfUsersIDViewSet)
 
 router.register('confvebinarstatic', StatisticConferenceViewSet)
 router.register('confvebinarstaticusers', StatisticConferenceUsersViewSet)
+
+
+router.register('onetooneconf', OneToOneConfViewSet)
+router.register('onetooneconflist', OneToOneConfListViewSet)
 
 urlpatterns = router.urls
 

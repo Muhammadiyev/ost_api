@@ -2,7 +2,12 @@ from django.contrib.auth import get_user_model, password_validation
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from django.contrib.auth.models import BaseUserManager
-from .models import TypeConf, Conference, ConferenceUser
+from .models import (
+    Conference, 
+    ConferenceUser, 
+    TypeConf, 
+    OneToOneConf
+)
 from users.serializers import UserOfConferenceSerializer, CustomUserCreateSerializer, UserOfConfSerializer, UsersAllSerializer
 
 User = get_user_model()
@@ -151,3 +156,18 @@ class ConferenceUserSerializer(serializers.ModelSerializer):
         model = ConferenceUser
         fields = ['id', 'conference', 'see_user', 'number_users',
                   'status']
+
+class OneToOneConfSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OneToOneConf
+        fields = ['id', 'creator','invited','status_call','status']
+
+
+class OneToOneConfListSerializer(serializers.ModelSerializer):
+    creator = UsersAllSerializer(read_only=True)
+    invited = UsersAllSerializer(read_only=True)
+
+    class Meta:
+        model = OneToOneConf
+        fields = ['id', 'creator','invited','status_call','status']
