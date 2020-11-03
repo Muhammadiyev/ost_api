@@ -92,3 +92,28 @@ class OneToOneConf(models.Model):
 
     def __str__(self):
         return f"{self.creator} - {self.invited} - {self.rating}"
+
+
+    
+class SettingsConf(models.Model):
+    creator = models.ForeignKey(
+        'users.CustomUser', blank=True, null=True, on_delete=models.CASCADE, related_name="settings_creator_of_user")
+    conf = models.ForeignKey(
+        Conference, blank=True,null=True, on_delete=models.CASCADE, related_name="conf_of_conference")
+    audio_muted = models.ManyToManyField(
+        CustomUser, blank=True, related_name="audio_of_users")
+    video_muted = models.ManyToManyField(
+        CustomUser, blank=True, related_name="video_of_users")
+    record_users = models.ManyToManyField(
+        CustomUser, blank=True, related_name="record_of_users")
+    demostration_users = models.ManyToManyField(
+        CustomUser, blank=True, related_name="demostration_of_users")
+    blocked_users = models.ManyToManyField(
+        CustomUser, blank=True, related_name="blocked_of_users")
+    in_record = models.ManyToManyField(
+        CustomUser, blank=True, related_name="in_record_of_users")
+    in_demonstration = models.ManyToManyField(
+        CustomUser, blank=True, related_name="in_demonstration_of_users")
+
+    def __str__(self):
+        return f"{self.creator} "

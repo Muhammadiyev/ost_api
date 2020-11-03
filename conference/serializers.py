@@ -6,7 +6,8 @@ from .models import (
     Conference, 
     ConferenceUser, 
     TypeConf, 
-    OneToOneConf
+    OneToOneConf,
+    SettingsConf
 )
 from users.serializers import UserOfConferenceSerializer, CustomUserCreateSerializer, UserOfConfSerializer, UsersAllSerializer
 
@@ -171,3 +172,11 @@ class OneToOneConfListSerializer(serializers.ModelSerializer):
     class Meta:
         model = OneToOneConf
         fields = ['id', 'creator','invited','status_call','status']
+
+
+class SettingsConfSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SettingsConf
+        fields = ['id', 'creator','conf','audio_muted','video_muted',
+        'record_users','demostration_users','blocked_users','in_record','in_demonstration']

@@ -9,7 +9,8 @@ from .models import (
     Conference, 
     ConferenceUser, 
     TypeConf, 
-    OneToOneConf
+    OneToOneConf,
+    SettingsConf
 )
 from . import serializers
 from django_filters import rest_framework as filters
@@ -341,3 +342,13 @@ class OneToOneConfListViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
     filter_fields = ['creator','invited','status_call','status']
+
+
+class SettingsConfViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = SettingsConf.objects.all()
+    serializer_class = serializers.SettingsConfSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['creator','conf']
