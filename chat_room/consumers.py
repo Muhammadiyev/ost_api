@@ -1,6 +1,11 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from channels.db import database_sync_to_async
+from .serializers import ChatPostSerializer
+
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -25,22 +30,31 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         username = text_data_json['username']
-
+        # a = User.objects.get_or_create(user = self.scope['user'])
+        
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'message': message,
-                'username': username
+                'username': username,
+                'room_id':self.room_name
             }
         )
 
     def chat_message(self, event):
         message = event['message']
         username = event['username']
-
+     
+	
         self.send(text_data=json.dumps({
-            'event': "Send",
             'message': message,
-            'username': username
+            'username':username
         }))
+
+    #@database_sync_to_async
+    def _create_chat(self, content):
+        serializer = ChatPostSerializer(data=content)
+        serializer.is_valid(raise_exception=True)
+        room = serializer.create(serializer.validated_data)
+        return room

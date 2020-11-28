@@ -11,4 +11,4 @@ variables.py
 .env.prod
 .env.prod.db
 .vscode
-venv
+myvenv

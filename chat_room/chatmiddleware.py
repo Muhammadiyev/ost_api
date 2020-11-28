@@ -1,26 +1,37 @@
+from urllib.parse import urlparse, parse_qs
 from channels.auth import AuthMiddlewareStack
+
+# Импорт DRF.
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import AuthenticationFailed
+
+# Импорты Django.
 from django.contrib.auth.models import AnonymousUser
 from django.db import close_old_connections
 
-
 class TokenAuthMiddleware:
-    """Token authorization"""
-
-    def __init__(self, inner):
+    """
+    Промежуточный слой для токена авторизации
+    """
+    def __init__(self, inner):  
         self.inner = inner
 
     def __call__(self, scope):
-        headers = dict(scope['headers'])
-        if b'authorization' in headers:
+        query_string = scope['query_string']
+        if query_string:
             try:
-                token_name, token_key = headers[b'authorization'].decode().split()
-                if token_name == 'Token':
-                    token = Token.objects.get(key=token_key)
-                    scope['user'] = token.user
+                parsed_query = parse_qs(query_string)
+                token_key = parsed_query[b'token'][0].decode()
+                token_name = 'token'
+                if token_name == 'token':
+                    user  =  'Ваша функция аутентификации'
+                    scope['user'] = user
                     close_old_connections()
-            except Token.DoesNotExist:
+            except AuthenticationFailed:
                 scope['user'] = AnonymousUser()
+        else:
+            scope['user'] = AnonymousUser()
         return self.inner(scope)
 
-# TokenAuthMiddlewareStack = lambda inner: TokenAuthMiddleware(AuthMiddlewareStack(inner))
+def TokenAuthMiddlewareStack(inner):
+    return TokenAuthMiddleware(AuthMiddlewareStack(inner))

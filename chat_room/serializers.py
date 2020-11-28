@@ -35,3 +35,10 @@ class ChatPostSerializers(serializers.ModelSerializer):
     class Meta:
         model = Chat
         fields = ("room", "text")
+
+
+class ChatPostSerializer(serializers.ModelSerializer):
+    """Сериализация чата"""
+    class Meta:
+        model = Chat
+        fields = ("room",'user', "text")
