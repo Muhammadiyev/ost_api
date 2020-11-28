@@ -54,7 +54,7 @@ class Conference(models.Model):
     video_participant = models.BooleanField(_('video_participant'), default=True)
     entrance_organizer = models.BooleanField(_('entrance_organizer'), default=True)
     off_participant_volume = models.BooleanField(_('off_participant_volume'), default=True)
-
+    administrator = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return "%s" % self.theme

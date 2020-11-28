@@ -130,7 +130,7 @@ class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Conference
-        fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration',
+        fields = ['id', 'administrator', 'theme', 'description', 'timezone','when','not_limited', 'duration',
                   'save_conf', 'start_time', 'protected', 'status','start_status','user',
                   'usersofroleofdepartments','created_at','room_name','security_room',
                   'waiting_room','video_organizer','video_participant','entrance_organizer','off_participant_volume']
