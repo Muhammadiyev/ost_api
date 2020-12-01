@@ -179,4 +179,4 @@ class SettingsConfSerializer(serializers.ModelSerializer):
     class Meta:
         model = SettingsConf
         fields = ['id', 'creator','conf','audio_muted','video_muted',
-        'record_users','demostration_users','blocked_users','in_record','in_demonstration']
+        'record_users','demostration_users','blocked_users','in_record','in_demonstration','administrator']
