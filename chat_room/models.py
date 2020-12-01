@@ -16,21 +16,10 @@ class ThreadManager(models.Manager):
         qlookup2 = Q(user__username=other_username)
         qs = self.get_queryset().filter(qlookup1 | qlookup2).distinct()
         if qs.count() == 1:
-            return qs.user(), False
+            return qs.first(), False
         elif qs.count() > 1:
             return qs.order_by('timestamp').first(), False
         else:
-            # Klass = user.__class__
-            # try:
-            #     user2 = Klass.objects.get(username=other_username)
-            # except ObjectDoesNotExist:
-            #     user2 = None
-            # if user != user2:
-            #     obj = self.model(
-            #             user=user,
-            #         )
-            #     obj.save()
-            #     return obj, True
             return None, False
 
 
@@ -40,6 +29,9 @@ class Room(models.Model):
     invited = models.ManyToManyField(User, blank=True, verbose_name="Участники", related_name="invited_user")
     date = models.DateTimeField("Дата создания", auto_now_add=True)
 
+    # def __str__(self):
+    #     return f"{self.creator} - {self.invited} - {self.rating}"
+        
     class Meta:
         verbose_name = "Комната чата"
         verbose_name_plural = "Комнаты чатов"
@@ -52,7 +44,7 @@ class Chat(models.Model):
     text = models.TextField("Сообщение", max_length=500)
     date = models.DateTimeField("Дата отправки", auto_now_add=True)
 
-    #objects      = ThreadManager()
+    objects      = ThreadManager()
 
     class Meta:
         verbose_name = "Сообщение чата"

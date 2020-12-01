@@ -3,12 +3,48 @@ from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
-
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from chat_room.models import Room, Chat
-from chat_room.serializers import (RoomSerializers, ChatSerializers, ChatPostSerializers,  UserSerializer)
+from chat_room.serializers import (
+    RoomSerializers, 
+    ChatSerializers,
+    ChatSerializer, 
+    ChatPostSerializers,  
+    UserSerializer
+)
+from rest_framework import viewsets, status, generics
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from django_filters import rest_framework as filters
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework_simplejwt import authentication
+from rest_framework.views import APIView
+from django.db.models import Q
+
+User = get_user_model()
+
+
+class ChatListAPIView(generics.ListAPIView):
+    permission_classes = []
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+    authentication_classes = [authentication.JWTAuthentication, ]
+    filter_backends = (filters.DjangoFilterBackend,
+                       SearchFilter, OrderingFilter)
+    filter_fields = ['room']
+
+class ChatListIDAPIView(generics.RetrieveAPIView):
+    permission_classes = []
+    queryset = Chat.objects.filter()
+    serializer_class = ChatSerializer
+    
+
+def get_last_10_messages(chatId):
+    chat = get_object_or_404(Chat, id=chatId)
+    return chat.messages.order_by('-timestamp').all()[:10]
 
 
 class Rooms(APIView):

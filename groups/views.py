@@ -28,16 +28,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_fields = ['room','conference']
 
 
-class MessageViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = Message.objects.all()
-    serializer_class = serializers.MessagePostSerializer
-    authentication_classes = [authentication.JWTAuthentication, ]
-    filter_backends = (filters.DjangoFilterBackend,
-                       SearchFilter, OrderingFilter)
-    filter_fields = ['room', 'conference']
-
-
 class Rooms(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Room.objects.all()

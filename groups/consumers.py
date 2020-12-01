@@ -4,23 +4,18 @@ import json
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from channels.db import database_sync_to_async
-from .serializers import ChatPostSerializer
+# from .serializers import ChatPostSerializer
 import pickle
-from .views import get_last_10_messages
-from .models import Chat, Room
+
+from .models import Message, Room
+from conference.models import Conference
 
 
 
 class ChatConsumer(WebsocketConsumer):
 
-    def fetch_messages(self, data):
-        messages = get_last_10_messages(data['chatId'])
-        print(messages)
-        content = {
-            'command': 'messages',
-            'messages': self.messages_to_json(messages)
-        }
-        self.send_message(content)
+    def get_name(self):
+        return User.objects.all()[0].name
 
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -43,7 +38,9 @@ class ChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
         username = text_data_json['username']
         user = text_data_json['user']
-        self.save_chat(user, message)
+        conference = text_data_json['conference']
+        room = text_data_json['room']
+        self.save_chat(user,conference,room, message)
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -51,30 +48,28 @@ class ChatConsumer(WebsocketConsumer):
                 'message': message,
                 'username': username,
                 'room':self.room_name,
-                'user':user
+                'user':user,
+                'conference':conference
             }
         )
 
     def chat_message(self, event):
         message = event['message']
         username = event['username']
-        room_name = event["room"]
+        room = event["room"]
         user = event["user"]
-
+        conference = event["conference"]
+        
         self.send(text_data=json.dumps({
             'message': message,
             'username':username,
-            'room':self.room_name,
-            'user':user
+            'room':room,
+            'user':user,
+            'conference':conference
         }))
 
-    def send_message(self, message):
-        self.send(text_data=json.dumps(message))
-        
-    def save_chat(self, user, message):
-        thread_obj = self.room_name
-        room = Room.objects.get(id=thread_obj)
+    def save_chat(self,user,conference,room, message):
+        room_id = Room.objects.get(id=room)
         user_id = User.objects.get(id=user)
-        chat_all = Chat.objects.create(room=room,user=user_id, text=message)
-        chat = Chat.objects.filter(room=room).all()
-        return True
+        conf_id = Conference.objects.get(id=conference)
+        return Message.objects.create(room=room_id,sender=user_id,conference=conference_id, message=message)
