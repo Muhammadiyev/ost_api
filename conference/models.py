@@ -114,6 +114,7 @@ class SettingsConf(models.Model):
         CustomUser, blank=True, related_name="in_record_of_users")
     in_demonstration = models.ManyToManyField(
         CustomUser, blank=True, related_name="in_demonstration_of_users")
+    administrator = models.IntegerField(blank=True,null=True, default=0)
 
     def __str__(self):
         return f"{self.creator} "

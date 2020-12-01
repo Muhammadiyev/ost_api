@@ -26,7 +26,7 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
-
+        
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
@@ -72,4 +72,4 @@ class ChatConsumer(WebsocketConsumer):
         room_id = Room.objects.get(id=room)
         user_id = User.objects.get(id=user)
         conf_id = Conference.objects.get(id=conference)
-        return Message.objects.create(room=room_id,sender=user_id,conference=conference_id, message=message)
+        return Message.objects.create(room=room_id,sender=user_id,conference=conf_id, message=message)

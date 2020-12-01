@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, logout
 from django.core.exceptions import ImproperlyConfigured
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -18,7 +18,7 @@ from django.db.models import Q
 User = get_user_model()
 
 
-class MessageViewSet(viewsets.ModelViewSet):
+class MessageAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Message.objects.all()
     serializer_class = serializers.MessageSerializer
