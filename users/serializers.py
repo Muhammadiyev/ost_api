@@ -241,12 +241,19 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     children = RecursiveSerializer(read_only=True, many=True)
 
+    def to_representation(self, data):
+        data = super(UserOfRoleOfDepartmentRoleSerializer, self).to_representation(data)
+        #print(a)
+        
+        data['children'] = False  if data.get('children') == [] else data['children']
+
+        return data
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'department',
-                  'parent', 'company',  'children']
-
-
+        fields = ['id', 'username', 'email',
+                  'parent', 'company',  'department', 'children']
+    
+        
 class UsersAllSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
     id = serializers.IntegerField()

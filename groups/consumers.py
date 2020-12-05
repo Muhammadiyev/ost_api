@@ -14,9 +14,6 @@ from conference.models import Conference
 
 class ChatConsumer(WebsocketConsumer):
 
-    def get_name(self):
-        return User.objects.all()[0].name
-
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
@@ -72,4 +69,7 @@ class ChatConsumer(WebsocketConsumer):
         room_id = Room.objects.get(id=room)
         user_id = User.objects.get(id=user)
         conf_id = Conference.objects.get(id=conference)
-        return Message.objects.create(room=room_id,sender=user_id,conference=conf_id, message=message)
+        msg = Message.objects.create(room=room_id,sender=user_id,conference=conf_id, message=message)
+        #messages = Message.objects.filter(conference=conf_id).all()
+        #print(messages)
+        return True
