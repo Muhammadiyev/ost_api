@@ -65,8 +65,9 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         userIds = request.data['usersofroleofdepartments']
         userI = request.data['user']
         user_id = User.objects.get(id=userI)
-        # print(user_id.username)
-        # print(f"vconf.pager.uz sizni konferentsiyaga taklif qiladi {user_id.username}")
+        when = request.data['when']
+        start_time = request.data['start_time']
+
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
@@ -79,7 +80,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text': f"vconf.pager.uz sizni konferentsiyaga taklif qiladi:{user_id.username}, kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    payload = {'msisdn': phone, 'text': f"https://vconf.pager.uz sizni konferentsiyaga taklif qiladi:{user_id.username},boshlanish vaqti: {when}{start_time}, kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
                     
         email = User.objects.filter(
@@ -94,6 +95,8 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         userIds = request.data['usersofroleofdepartments']
         userI = request.data['user']
         user_id = User.objects.get(id=userI)
+        when = request.data['when']
+        start_time = request.data['start_time']
         users = request.data['user']
         username = User.objects.filter(
             id__in=users).values_list('first_name', flat=True)
@@ -113,7 +116,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
                     r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text':f"(eslatma) vconf.pager.uz konferentsiyaga taklif qiladi:{user_id.username} , konferensiya kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    payload = {'msisdn': phone, 'text':f"(eslatma) https://vconf.pager.uz konferentsiyaga taklif qiladi:{user_id.username} ,boshlanish vaqti: {when}{start_time}, konferensiya kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
 
         return response
