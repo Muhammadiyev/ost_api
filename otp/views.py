@@ -96,7 +96,7 @@ class ValidateOTP(APIView):
 
 
 class ConfValidateKey(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     authentication_classes = [authentication.JWTAuthentication, ]
 
     def post(self, request, *args, **kwargs):
@@ -111,13 +111,6 @@ class ConfValidateKey(APIView):
                 security_room = old.security_room
                 if str(otp_sent) == str(security_room):
                     old.validated = True
-                    if old is None:
-                        return Response({'status': 'notfound'}, status=status.HTTP_404_NOT_FOUND)
-                    expiry_date = old.created_at + \
-                        timedelta(hours=validation_time)
-                    if timezone.now() > expiry_date:
-                        old.delete()
-                        return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
                     return Response({
                         'status': True,
                         'detail': 'SECURITY ROOM MATCHED.'
