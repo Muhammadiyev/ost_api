@@ -92,6 +92,8 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         response = super(ConferenceViewSet, self).update(
             request, *args, **kwargs)
         userIds = request.data['usersofroleofdepartments']
+        userI = request.data['user']
+        user_id = User.objects.get(id=userI)
         users = request.data['user']
         username = User.objects.filter(
             id__in=users).values_list('first_name', flat=True)
