@@ -123,7 +123,7 @@ class ConfValidateKey(APIView):
                         'detail': 'SECURITY ROOM MATCHED.'
                     })
                 else:
-                    return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
+                    return Response({'status': 'INCOORECT'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
         else:
