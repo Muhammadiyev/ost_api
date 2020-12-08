@@ -2,7 +2,7 @@ from django.urls import path, include, re_path
 from django.conf.urls import url
 from django.conf import settings
 
-from .views import ValidateOTP, download
+from .views import ValidateOTP, download, ConfValidateKey
 from conference.views import ConferenceListViewSet
 from groups.views import MessageAPIView
 
@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^download/(?P<path>.*)$', download),
     path('conferencelist', ConferenceListViewSet.as_view()),
     path('v1/message', MessageAPIView.as_view()),
+    
+    re_path('^conf_validate_key/$', ConfValidateKey.as_view()),
 ]

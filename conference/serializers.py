@@ -26,7 +26,7 @@ class ConferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
-                  'save_conf', 'start_time', 'protected', 'status',
+                  'save_conf', 'start_time', 'protected', 'status','security_room',
                   'start_status', 'user','usersofroleofdepartments','created_at']
 
 

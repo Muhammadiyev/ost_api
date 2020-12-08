@@ -17,7 +17,7 @@ import random
 from datetime import timedelta
 from users.serializers import UserLoginSerializer
 from django.utils import timezone
-
+from conference.models import Conference
 
 User = get_user_model()
 
@@ -93,3 +93,38 @@ class ValidateOTP(APIView):
                 'status': False,
                 'detail': 'Please provide both phone and otp for validated'
             })
+
+
+class ConfValidateKey(APIView):
+    permission_classes = []
+    authentication_classes = [authentication.JWTAuthentication, ]
+
+    def post(self, request, *args, **kwargs):
+        id = request.data.get('id', False)
+        otp_sent = request.data.get('security_room', False)
+
+        if id and otp_sent:
+            old = Conference.objects.filter(id__iexact=id)
+            if old.exists():
+                validation_time = otp_expiry_time()
+                old = old.last()
+                security_room = old.security_room
+                if str(otp_sent) == str(security_room):
+                    old.validated = True
+                    if old is None:
+                        return Response({'status': 'notfound'}, status=status.HTTP_404_NOT_FOUND)
+                    expiry_date = old.created_at + \
+                        timedelta(hours=validation_time)
+                    if timezone.now() > expiry_date:
+                        old.delete()
+                        return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
+                    return Response({
+                        'status': True,
+                        'detail': 'SECURITY ROOM MATCHED.'
+                    })
+                else:
+                    return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'status': 'expired'}, status=status.HTTP_404_NOT_FOUND)
