@@ -96,7 +96,7 @@ class ValidateOTP(APIView):
 
 
 class ConfValidateKey(APIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     authentication_classes = [authentication.JWTAuthentication, ]
 
     def post(self, request, *args, **kwargs):
