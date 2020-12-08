@@ -7,13 +7,12 @@ from variables import (
     site_url, 
     SMS_LOGIN,
     SMS_PASSWORD,
-    SMS_URL,
-    SECRET_KEY
+    SMS_URL
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = SECRET_KEY #os.environ.get('SECRET_KEY','sdsdsdd')
+SECRET_KEY = os.environ.get('SECRET_KEY','sdsdsdd')
 
 DEBUG = 1 #int(os.environ.get('DEBUG', default=0))
 
