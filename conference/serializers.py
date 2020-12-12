@@ -135,10 +135,10 @@ class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
                   'usersofroleofdepartments','created_at','room_name','security_room',
                   'waiting_room','video_organizer','video_participant','entrance_organizer','off_participant_volume']
 
-    def to_representation(self, data):
-        data = super(ConfUserIDSerializer, self).to_representation(data)
-        data['security_room'] = True if data['security_room'] != None else data['security_room'] == True
-        return data
+    # def to_representation(self, data):
+    #     data = super(ConfUserIDSerializer, self).to_representation(data)
+    #     data['security_room'] = True if data['security_room'] != None else data['security_room'] == True
+    #     return data
 
     def update(self, instance, validated_data):
         all_users_data = validated_data.pop('usersofroleofdepartments')
