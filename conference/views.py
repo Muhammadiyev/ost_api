@@ -102,7 +102,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         username = User.objects.filter(
             id__in=users).values_list('first_name', flat=True)
         user_conf = list(username)
-
+        conf = Conference.objects.all().last()
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)
