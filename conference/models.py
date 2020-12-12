@@ -55,6 +55,7 @@ class Conference(models.Model):
     entrance_organizer = models.BooleanField(_('entrance_organizer'), default=True)
     off_participant_volume = models.BooleanField(_('off_participant_volume'), default=True)
     administrator = models.IntegerField(blank=True, default=0)
+    conf_protected_sms = models.BooleanField(_('conf_protected_sms'), null=True, default=True)
 
     def __str__(self):
         return "%s" % self.theme

@@ -38,21 +38,21 @@ class PhoneOTP(models.Model):
 
 
 
-class ConfValidateKey(models.Model):
-    conference = models.ForeignKey(
-        'conference.Conference', on_delete=models.CASCADE, related_name="confvalidated_of_conference")
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="confvalidated_of_user")
-    security_room = models.CharField(max_length=9, blank=True, null=True)
-    validated = models.BooleanField(
-        default=False, help_text='If it is true, that means user have validate otp correctly in second API')
+# class ConfValidateKey(models.Model):
+#     conference = models.ForeignKey(
+#         'conference.Conference', on_delete=models.CASCADE, related_name="confvalidated_of_conference")
+#     user = models.ForeignKey(
+#         User, on_delete=models.CASCADE, related_name="confvalidated_of_user")
+#     security_room = models.CharField(max_length=9, blank=True, null=True)
+#     validated = models.BooleanField(
+#         default=False, help_text='If it is true, that means user have validate otp correctly in second API')
     
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        null=True,
-        verbose_name=_("When was this token generated")
-    )
-    count = models.IntegerField(default=1, help_text='Number of Limit')
+#     created_at = models.DateTimeField(
+#         auto_now_add=True,
+#         null=True,
+#         verbose_name=_("When was this token generated")
+#     )
+#     count = models.IntegerField(default=1, help_text='Number of Limit')
     
-    def __str__(self):
-        return str(self.user) + 'is sent ' + str(self.security_room)
+#     def __str__(self):
+#         return str(self.user) + 'is sent ' + str(self.security_room)
