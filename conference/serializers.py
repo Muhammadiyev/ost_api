@@ -26,7 +26,7 @@ class ConferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited', 'duration', 'typeconf',
-                  'save_conf', 'start_time', 'protected', 'status','security_room',
+                  'save_conf', 'start_time', 'protected', 'status','security_room','conf_protected_sms',
                   'start_status', 'user','usersofroleofdepartments','created_at']
 
 
@@ -36,7 +36,7 @@ class ConferenceOnSerializer(serializers.ModelSerializer):
         model = Conference
         fields = ['id', 'theme', 'description', 'timezone','when','not_limited',
                   'duration', 'typeconf','save_conf', 'start_time', 'protected', 'status',
-                  'start_status', 'user','usersofroleofdepartments','created_at','security_room',
+                  'start_status', 'user','usersofroleofdepartments','created_at','security_room','conf_protected_sms',
                   'waiting_room','video_organizer','video_participant','entrance_organizer','off_participant_volume']
 
 class StatisticConferenceSerializer(serializers.ModelSerializer):
