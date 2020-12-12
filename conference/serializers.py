@@ -133,7 +133,7 @@ class ConfUserIDSerializer(serializers.HyperlinkedModelSerializer):
         model = Conference
         fields = ['id', 'administrator', 'theme', 'description', 'timezone','when','not_limited', 'duration',
                   'save_conf', 'start_time', 'protected', 'status','start_status','user',
-                  'usersofroleofdepartments','created_at','room_name','security_room',
+                  'usersofroleofdepartments','created_at','room_name','security_room','conf_protected_sms',
                   'waiting_room','video_organizer','video_participant','entrance_organizer','off_participant_volume']
 
     # def to_representation(self, data):
