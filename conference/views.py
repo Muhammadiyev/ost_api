@@ -64,6 +64,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
             request, *args, **kwargs)
         userIds = request.data['usersofroleofdepartments']
         userI = request.data['user']
+        print(request.data)
         user_id = User.objects.get(id=userI)
         when = request.data['when']
         start_time = request.data['start_time']

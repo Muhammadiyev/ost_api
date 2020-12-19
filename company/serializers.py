@@ -48,7 +48,14 @@ class DepartmentOfUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_of_department','user',
                   'parent', 'department_name_uz', 'department_name_ru','children']
 
+    def to_representation(self, data):
+        data = super(DepartmentOfUserSerializer, self).to_representation(data)
+        print(data)
+        
+        data['children'] = False  if data.get('children') == [] else data['children']
 
+        return data
+        
 class DepartmentOfUsersSerializer(serializers.ModelSerializer):
     children = DRecursiveSerializer(read_only=True, many=True)
     user_of_department = UserOfDepartmentSerializer(read_only=True, many=True)
