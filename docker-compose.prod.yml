@@ -5,12 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    command: gunicorn ost_api.wsgi:application --bind 0.0.0.0:8080
+    command: gunicorn ost_api.wsgi:application --bind 0.0.0.0:80
     volumes:
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles
     expose:
-      - 8080
+      - 80
     env_file: .env
     depends_on:
       - db
@@ -25,7 +25,7 @@ services:
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles
     ports:
-      - 8080:8080
+      - 80:80
     depends_on:
       - web
 volumes:

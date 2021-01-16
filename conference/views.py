@@ -64,7 +64,6 @@ class ConferenceViewSet(viewsets.ModelViewSet):
             request, *args, **kwargs)
         userIds = request.data['usersofroleofdepartments']
         userI = request.data['user']
-        print(request.data)
         user_id = User.objects.get(id=userI)
         when = request.data['when']
         start_time = request.data['start_time']
@@ -102,7 +101,6 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         username = User.objects.filter(
             id__in=users).values_list('first_name', flat=True)
         user_conf = list(username)
-        print(request.data)
         phone = User.objects.filter(
             id__in=userIds).values_list('phone', flat=True)
         phone_number = list(phone)

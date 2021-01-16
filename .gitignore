@@ -5,6 +5,7 @@ Pipfile.lock
 .env.db
 .vscode
 staticfiles
+mediafiles
 celerybeat-schedule
 variables.py
 .env.dev

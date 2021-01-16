@@ -49,9 +49,7 @@ class DepartmentOfUserSerializer(serializers.ModelSerializer):
                   'parent', 'department_name_uz', 'department_name_ru','children']
 
     def to_representation(self, data):
-        data = super(DepartmentOfUserSerializer, self).to_representation(data)
-        print(data)
-        
+        data = super(DepartmentOfUserSerializer, self).to_representation(data)        
         data['children'] = False  if data.get('children') == [] else data['children']
 
         return data

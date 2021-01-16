@@ -242,12 +242,10 @@ class UserOfRoleOfDepartmentRoleSerializer(serializers.ModelSerializer):
     children = RecursiveSerializer(read_only=True, many=True)
 
     def to_representation(self, data):
-        data = super(UserOfRoleOfDepartmentRoleSerializer, self).to_representation(data)
-        #print(a)
-        
+        data = super(UserOfRoleOfDepartmentRoleSerializer, self).to_representation(data)        
         data['children'] = False  if data.get('children') == [] else data['children']
-
         return data
+        
     class Meta:
         model = User
         fields = ['id', 'username', 'email',
