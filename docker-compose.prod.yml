@@ -20,10 +20,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file: .env.db
   redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
+    image: 3.7.4-alpine
     volumes:
       - redisdata:/data
   nginx:
