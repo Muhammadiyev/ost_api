@@ -85,7 +85,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
-        send_email(email)
+        # send_email(email)
 
         return response
     
@@ -152,7 +152,7 @@ class ConferenceUpdatedViewSet(viewsets.ModelViewSet):
                     
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
-        send_email(email)
+        # send_email(email)
         return response
 
 

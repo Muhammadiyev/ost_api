@@ -18,7 +18,15 @@ services:
     image: postgres:11.5-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - redis:redis
     env_file: .env.db
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
   nginx:
     build: ./nginx
     volumes:
@@ -32,3 +40,4 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
+  redisdata:
