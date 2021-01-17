@@ -11,8 +11,6 @@ services:
       - media_volume:/usr/src/app/mediafiles
     expose:
       - 80
-    links:
-      - redis:redis
     env_file: .env
     depends_on:
       - db
