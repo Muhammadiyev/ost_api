@@ -20,7 +20,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file: .env.db
   redis:
-    image: 3.7.4-alpine
+    image: redis:3.2-alpine
     volumes:
       - redisdata:/data
   nginx:
