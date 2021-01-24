@@ -26,7 +26,7 @@ class Room(models.Model):
 
 class Message(models.Model):
     room = models.ForeignKey(Room,blank=True,null=True,  verbose_name="Комната чата", on_delete=models.CASCADE)
-    sender = models.ForeignKey(
+    user = models.ForeignKey(
         CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(
         CustomUser,blank=True,null=True, on_delete=models.CASCADE, related_name='receiver')
@@ -38,7 +38,11 @@ class Message(models.Model):
     status = models.BooleanField(_('public_conference'), default=True)
 
     def __str__(self):
-        return self.message
+        return self.username
 
     class Meta:
         ordering = ('timestamp',)
+
+    @property
+    def username(self):
+        return f"{self.user.username}"

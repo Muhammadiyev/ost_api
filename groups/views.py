@@ -19,7 +19,7 @@ User = get_user_model()
 
 
 class MessageAPIView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = Message.objects.all()
     serializer_class = serializers.MessageSerializer
     authentication_classes = [authentication.JWTAuthentication, ]

@@ -34,16 +34,17 @@ class RoomGetSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     """Сериализация чата"""
-    sender = UserSerializer()
-    receiver = UserSerializer()
+    # sender = UserSerializer()
+    # receiver = UserSerializer()
+    username = serializers.CharField(read_only=True)
 
     class Meta:
         model = Message
-        fields = ('id', "sender",'receiver', "message", "timestamp",'status','conference')
+        fields = ('id','username', "user",'receiver', "message", "timestamp",'status','conference')
 
 
 class MessagePostSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = Message
-        fields = ['id','room', 'sender','receiver', 'message', 'timestamp','file','is_read','conference','status']
+        fields = ['id','room', 'user','receiver', 'message', 'timestamp','file','is_read','conference','status']
