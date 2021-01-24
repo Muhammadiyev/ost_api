@@ -69,7 +69,7 @@ class ChatConsumer(WebsocketConsumer):
         room_id = Room.objects.get(id=room)
         user_id = User.objects.get(id=user)
         conf_id = Conference.objects.get(id=conference)
-        msg = Message.objects.create(room=room_id,sender=user_id,conference=conf_id, message=message)
+        msg = Message.objects.create(room=room_id,user=user_id,conference=conf_id, message=message)
         #messages = Message.objects.filter(conference=conf_id).all()
         #print(messages)
         return True

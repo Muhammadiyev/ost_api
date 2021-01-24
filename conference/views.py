@@ -6,9 +6,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from .models import (
-    Conference, 
-    ConferenceUser, 
-    TypeConf, 
+    Conference,
+    ConferenceUser,
+    TypeConf,
     OneToOneConf,
     SettingsConf
 )
@@ -24,7 +24,7 @@ from rest_framework import permissions, static, generics
 from permissions.permissions import UserHasPermission, IsAdminOrConferenceOwner
 import random
 from django.template.loader import render_to_string
-from django.db.models import Count, Sum, Max, Min,Avg, F,BooleanField, Case, When, Q, IntegerField, FloatField
+from django.db.models import Count, Sum, Max, Min, Avg, F, BooleanField, Case, When, Q, IntegerField, FloatField
 
 
 import requests
@@ -79,16 +79,18 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
-                    r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text': f"https://vconf.pager.uz/#/ sizni konferentsiyaga taklif qiladi:{user_id.username},boshlanish vaqti: {when } , { start_time}, kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get(
+                        'http://91.204.239.42/stop_all?action=delete&', params=payload)
+                    payload = {'msisdn': phone, 'text': f"https://vconf.pager.uz/#/ sizni konferentsiyaga taklif qiladi:{user_id.username},boshlanish vaqti: {when } , { start_time}, kirish uchun KOD: %s" % key,
+                               'priority': "1", 'id': 0, 'delivery-notification-requested': 'true', 'login': settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0, 'version': 1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
-                    
+
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
         # send_email(email)
 
         return response
-    
+
     def update(self, request, *args, **kwargs):
         response = super(ConferenceViewSet, self).update(
             request, *args, **kwargs)
@@ -110,12 +112,14 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                 phone = str(ph)
                 user = User.objects.filter(phone__iexact=phone)
                 key = send_otp(phone)
-                
+
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
-                    r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text':f"(eslatma) https://vconf.pager.uz/#/ konferentsiyaga taklif qiladi:{user_id.username} ,boshlanish vaqti: {when} , {start_time}, konferensiya kirish uchun KOD: %s" % key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get(
+                        'http://91.204.239.42/stop_all?action=delete&', params=payload)
+                    payload = {'msisdn': phone, 'text': f"(eslatma) https://vconf.pager.uz/#/ konferentsiyaga taklif qiladi:{user_id.username} ,boshlanish vaqti: {when} , {start_time}, konferensiya kirish uchun KOD: %s" % key,
+                               'priority': "1", 'id': 0, 'delivery-notification-requested': 'true', 'login': settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0, 'version': 1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
 
         return response
@@ -146,10 +150,12 @@ class ConferenceUpdatedViewSet(viewsets.ModelViewSet):
                 if key:
                     PhoneOTP.objects.create(phone=phone, otp=key)
                     payload = {'msisdn': phone}
-                    r = requests.get('http://91.204.239.42/stop_all?action=delete&',params=payload)
-                    payload = {'msisdn': phone, 'text': key, 'priority':"1", 'id': 0,'delivery-notification-requested' : 'true','login' : settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0,'version':1.0}
+                    r = requests.get(
+                        'http://91.204.239.42/stop_all?action=delete&', params=payload)
+                    payload = {'msisdn': phone, 'text': key, 'priority': "1", 'id': 0, 'delivery-notification-requested': 'true',
+                               'login': settings.SMS_LOGIN, 'password': settings.SMS_PASSWORD, 'ref-id': 0, 'version': 1.0}
                     r = requests.get(settings.SMS_URL, params=payload)
-                    
+
         email = User.objects.filter(
             id__in=userIds).values_list('email', flat=True)
         # send_email(email)
@@ -171,6 +177,7 @@ class ConferenceFViewSet(viewsets.ModelViewSet):
         userIds = request.data['usersofroleofdepartments']
         return response
 
+
 def send_otp(phone):
     if phone:
         key = random.randint(9999, 99999)
@@ -186,7 +193,7 @@ class ConferenceGetViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['typeconf', 'user']
+    filter_fields = ['typeconf', 'user', 'usersofroleofdepartments']
 
 
 class ConferenceListViewSet(generics.ListAPIView):
@@ -196,8 +203,8 @@ class ConferenceListViewSet(generics.ListAPIView):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['usersofroleofdepartments', 'user__company','user']
-    
+    filter_fields = ['usersofroleofdepartments', 'user__company', 'user']
+
 
 class ConfUsersIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -206,7 +213,7 @@ class ConfUsersIDViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['usersofroleofdepartments', 'typeconf','user']
+    filter_fields = ['usersofroleofdepartments', 'typeconf', 'user']
 
 
 class ConferenceUserIDViewSet(viewsets.ModelViewSet):
@@ -216,8 +223,8 @@ class ConferenceUserIDViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['usersofroleofdepartments', 'typeconf','user']
-    
+    filter_fields = ['usersofroleofdepartments', 'typeconf', 'user']
+
 
 class ConfUserIDViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -226,7 +233,7 @@ class ConfUserIDViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['usersofroleofdepartments', 'typeconf','user']
+    filter_fields = ['usersofroleofdepartments', 'typeconf', 'user']
 
     def get_permissions(self):
         if self.action == 'list':
@@ -304,13 +311,13 @@ class StatisticConferenceViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['typeconf','user']
+    filter_fields = ['typeconf', 'user']
 
     def get_queryset(self):
         queryset = Conference.objects.all()
-        queryset = queryset.values('typeconf','user').annotate(
-            static_conf=Count('user')) 
-         
+        queryset = queryset.values('typeconf', 'user').annotate(
+            static_conf=Count('user'))
+
         return queryset
 
 
@@ -321,13 +328,13 @@ class StatisticConferenceUsersViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['id','conference_of_users__typeconf']
-    
+    filter_fields = ['id', 'conference_of_users__typeconf']
+
     def get_queryset(self):
         queryset = User.objects.all()
-        queryset = queryset.values('conference_of_users__typeconf','id').annotate(
-            static=Count('conference_of_users',distinct=True )) 
-         
+        queryset = queryset.values('conference_of_users__typeconf', 'id').annotate(
+            static=Count('conference_of_users', distinct=True))
+
         return queryset
 
 
@@ -338,7 +345,7 @@ class OneToOneConfViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['creator','invited','status_call','status']
+    filter_fields = ['creator', 'invited', 'status_call', 'status']
 
 
 class OneToOneConfListViewSet(viewsets.ModelViewSet):
@@ -348,7 +355,7 @@ class OneToOneConfListViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['creator','invited','status_call','status']
+    filter_fields = ['creator', 'invited', 'status_call', 'status']
 
 
 class SettingsConfViewSet(viewsets.ModelViewSet):
@@ -358,4 +365,4 @@ class SettingsConfViewSet(viewsets.ModelViewSet):
     authentication_classes = [authentication.JWTAuthentication, ]
     filter_backends = (filters.DjangoFilterBackend,
                        SearchFilter, OrderingFilter)
-    filter_fields = ['creator','conf']
+    filter_fields = ['creator', 'conf']
