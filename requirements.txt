@@ -2,7 +2,7 @@ autopep8==1.5
 Babel==2.8.0
 certifi==2019.11.28
 chardet==3.0.4
-Django==2.2.7
+Django==2.2.21
 django-cors-headers==3.2.1
 django-filter==2.2.0
 django-mail-templated==2.6.5
